@@ -1,8 +1,16 @@
-dotenv>=0.9.9
-httpx>=0.28.1
-mcp[cli]>=1.8.0,<2
-pillow>=11.0.0
-python-dotenv>=1.1.0
-python-json-logger>=3.3.0
-qrcode>=8.2
-telethon>=1.44.0
+httpx>=0.28,<1
+mcp[cli]>=1.29,<2
+pillow>=11,<13
+python-dotenv>=1.1,<2
+python-json-logger>=3.3,<5
+qrcode>=8.2,<9
+telethon>=1.44,<2
+
+# Development and release validation
+build>=1.2,<2
+mypy>=1.14,<2
+pip-audit>=2.7,<3
+pytest>=8.3,<10
+pytest-asyncio>=0.24,<2
+pytest-cov>=6,<8
+ruff>=0.9,<1

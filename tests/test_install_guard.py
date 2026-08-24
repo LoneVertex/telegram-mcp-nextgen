@@ -36,7 +36,7 @@ def _identity(**overrides):
         "authors": ("chigwell, l1v0n1",),
         "maintainers": (),
         "urls": ("Homepage, https://github.com/chigwell/telegram-mcp",),
-        "summary": "Telegram integration for Claude via the Model Context Protocol",
+        "summary": "Telegram integration via the Model Context Protocol",
         "direct_url": _direct_url("https://github.com/chigwell/telegram-mcp.git", vcs="git"),
     }
     values.update(overrides)
@@ -83,7 +83,7 @@ def test_install_guard_rejects_known_pypi_collision_metadata():
     assert "Refusing to start" in message
     assert "0.6.3" in message
     assert "Furkan Kucuk" in message
-    assert "git+https://github.com/chigwell/telegram-mcp.git" in message
+    assert "git+https://github.com/LoneVertex/telegram-mcp-nextgen.git" in message
 
 
 def test_install_guard_rejects_spoofed_metadata_without_trusted_origin():
@@ -177,4 +177,19 @@ def test_install_guard_allows_fork_distribution_with_direct_url(monkeypatch):
         lambda _distribution_name: FakeDistribution(),
     )
 
+    install_guard.assert_safe_distribution()
+
+
+def test_install_guard_allows_explicit_trusted_artifact_override(monkeypatch):
+    class FakeDistribution:
+        version = "4.0.0"
+
+        def __init__(self):
+            self.metadata = Message()
+            self.metadata["Name"] = "telegram-mcp"
+            self.metadata["Version"] = "4.0.0"
+            self.metadata["Author"] = "LoneVertex"
+
+    monkeypatch.setattr(install_guard.metadata, "distribution", lambda _name: FakeDistribution())
+    monkeypatch.setenv("TELEGRAM_MCP_ALLOW_INSTALLED", "true")
     install_guard.assert_safe_distribution()

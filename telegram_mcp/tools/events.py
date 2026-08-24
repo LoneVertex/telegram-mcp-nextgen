@@ -27,8 +27,8 @@ _activity_event: Optional[asyncio.Event] = None
 
 # --- Incoming event feed (callback mode) ---
 # When enabled, a background task consumes settled bursts and appends them as
-# JSONL lines to the feed file, so an external watcher (e.g. Claude Code's
-# Monitor on `tail -f`) can wake an agent per event instead of the agent
+# JSONL lines to the feed file, so an external watcher can monitor the
+# feed with `tail -f` and wake an agent per event instead of the agent
 # holding a blocking wait_for_settled_message call open.
 _FEED_FILE_ENV = "TELEGRAM_EVENT_FEED_FILE"
 _feed_task: Optional[asyncio.Task] = None
@@ -390,19 +390,19 @@ async def wait_for_settled_message(
 @mcp.tool(annotations=ToolAnnotations(title="Enable Incoming Feed", openWorldHint=True))
 async def enable_incoming_feed(settle_ms: int = 6000) -> str:
     """
-    CLAUDE CODE ONLY. Enable callback mode: a background task appends every
+    Enable callback mode: a background task appends every
     settled incoming burst as one JSON line to the feed file, so an external
     watcher can wake the agent per event instead of the agent blocking in
     wait_for_settled_message.
 
-    In Claude Code, after calling this, arm a persistent Monitor on the returned
+    After calling this, arm a persistent monitor on the returned
     `watch_command` — each new line then re-invokes the agent with the burst
     summary (chat_id, name, message_count, ...), and the agent reads the chat
     with regular tools. Idempotent; calling again with a different settle_ms
     restarts the task.
 
-    In Codex or any client without a wake-on-output mechanism, do NOT enable
-    this — keep using wait_for_settled_message; with the feed disabled
+    If the client lacks a wake-on-output mechanism, do NOT enable this — keep
+    using wait_for_settled_message; with the feed disabled
     (the default) behavior is exactly as before this feature existed.
 
     Note: while the feed is enabled it consumes settled bursts, so don't mix it

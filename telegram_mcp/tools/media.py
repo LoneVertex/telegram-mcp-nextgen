@@ -1,6 +1,7 @@
 """Media MCP tools."""
 
 from telegram_mcp.runtime import *
+from telegram_mcp.core.security import atomic_write_bytes
 
 from telegram_mcp.contact_sheet import ContactSheetUnavailable, build_contact_sheet
 from telegram_mcp.photo_source import (
@@ -190,6 +191,9 @@ async def download_media(
             return f"Download failed for message {message_id}."
 
         final_path = Path(downloaded).resolve(strict=True)
+        if final_path.stat().st_size > settings.max_media_download_bytes:
+            await asyncio.to_thread(final_path.unlink)
+            return "Downloaded media exceeds the configured size limit."
         roots, roots_error = await _ensure_allowed_roots(ctx, "download_media")
         if roots_error:
             return roots_error
@@ -567,6 +571,9 @@ async def open_photo(
         if not photo_bytes:
             return f"Download failed for photo {reference.identifier}."
 
+        if len(photo_bytes) > settings.max_media_download_bytes:
+            return "Photo exceeds the configured media size limit."
+
         if save_path:
             kept_path, path_error = await _resolve_writable_file_path(
                 raw_path=save_path,
@@ -576,7 +583,15 @@ async def open_photo(
             )
             if path_error:
                 return path_error
-            kept_path.write_bytes(photo_bytes)
+            async def photo_stream():
+                yield photo_bytes
+
+            await atomic_write_bytes(
+                kept_path.parent,
+                kept_path.name,
+                photo_stream(),
+                max_bytes=settings.max_media_download_bytes,
+            )
 
         return Image(data=photo_bytes, format="jpeg")
     except Exception as e:

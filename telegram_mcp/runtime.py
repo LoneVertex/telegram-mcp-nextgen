@@ -59,6 +59,11 @@ from functools import wraps
 import telethon.errors.rpcerrorlist
 from sanitize import sanitize_user_content, sanitize_name, sanitize_dict, format_tool_result
 from telegram_mcp.client_identity import client_identity_kwargs
+from telegram_mcp.config import ConfigurationError, Settings
+from telegram_mcp.core.locks import KeyedLockManager
+from telegram_mcp.core.rate_limiter import TokenBucket
+from telegram_mcp.core.registry import apply_tool_tier
+from telegram_mcp.core.retry import run_with_policy
 
 
 class ValidationError(Exception):
@@ -113,8 +118,15 @@ def get_entity_filter_type(entity: Any) -> Optional[str]:
 
 load_dotenv()
 
-TELEGRAM_API_ID = int(os.getenv("TELEGRAM_API_ID"))
-TELEGRAM_API_HASH = os.getenv("TELEGRAM_API_HASH")
+# Configuration validation is side-effect free; credentials are required only when
+# a live connection is started. This keeps local imports and cache tooling usable.
+try:
+    settings = Settings.from_env()
+except (ConfigurationError, ValueError) as exc:
+    raise SystemExit(f"Invalid Telegram MCP configuration: {exc}") from None
+
+TELEGRAM_API_ID = settings.api_id or 0
+TELEGRAM_API_HASH = settings.api_hash or ""
 
 # The shared HTTP service can be consumed by long-lived MCP clients. Stateless requests keep
 # those clients usable across server-process restarts instead of rejecting their next call
@@ -412,7 +424,7 @@ def _acquire_session(pool: List[str]) -> str:
     )
 
 
-def _discover_accounts() -> dict[str, TelegramClient]:
+def _discover_accounts(*, silent: bool = False) -> dict[str, TelegramClient]:
     """Scan env vars to build account label -> TelegramClient mapping.
 
     Detection rules:
@@ -455,18 +467,31 @@ def _discover_accounts() -> dict[str, TelegramClient]:
         elif session_name:
             accounts["default"] = _build_client(session_name, "default")
 
-    if not accounts:
+    if not accounts and not silent:
         print(
-            "Error: No Telegram session configured. "
-            "Set TELEGRAM_SESSION_STRING or TELEGRAM_SESSION_STRING_<LABEL> in .env",
+            "Error: No Telegram session configured. Set TELEGRAM_SESSION_STRING or "
+            "TELEGRAM_SESSION_STRING_<LABEL> in .env",
             file=sys.stderr,
         )
         sys.exit(1)
-
     return accounts
 
 
-clients: dict[str, TelegramClient] = _discover_accounts()
+clients: dict[str, TelegramClient] = _discover_accounts(silent=True)
+_client_locks = KeyedLockManager()
+_client_limiters: dict[str, TokenBucket] = {}
+
+
+def _client_limiter(label: str) -> TokenBucket:
+    limiter = _client_limiters.get(label)
+    if limiter is None:
+        limiter = TokenBucket(settings.rate_capacity, settings.rate_refill_per_second)
+        _client_limiters[label] = limiter
+    return limiter
+
+
+async def _acquire_client_controls(label: str) -> None:
+    await _client_limiter(label).acquire()
 
 
 def get_client(account: str = None) -> TelegramClient:
@@ -488,6 +513,25 @@ def is_multi_mode() -> bool:
     return len(clients) > 1
 
 
+_DESTRUCTIVE_TOOL_NAMES = {
+    "delete_chat_history", "delete_messages_bulk", "delete_message", "delete_scheduled_message",
+    "delete_contact", "delete_contact_alias", "delete_folder", "delete_profile_photo",
+    "delete_chat_photo", "ban_user", "leave_chat", "unban_user", "demote_admin",
+    "remove_chat_from_folder", "unpin_all_messages", "clear_draft",
+}
+
+
+def _mutation_denial(tool_name: str) -> str:
+    return json.dumps(
+        {
+            "error": "MutationDisabled",
+            "tool": tool_name,
+            "nothing_sent": True,
+            "message": "Write operations are disabled. Set TELEGRAM_SEND_ENABLED=true and restart the server.",
+        }
+    )
+
+
 def with_account(readonly=False):
     """Decorator that adds multi-account support to MCP tools.
 
@@ -505,10 +549,31 @@ def with_account(readonly=False):
         @wraps(fn)
         async def wrapper(*args, **kwargs):
             account = kwargs.get("account")
+            if not readonly:
+                tool_name = getattr(fn, "__name__", "unknown")
+                if not settings.send_enabled:
+                    return _mutation_denial(tool_name)
+                if tool_name in _DESTRUCTIVE_TOOL_NAMES and not settings.destructive_enabled:
+                    return json.dumps(
+                        {
+                            "error": "DestructiveOperationDisabled",
+                            "tool": tool_name,
+                            "nothing_done": True,
+                            "message": "Destructive operations are disabled by configuration.",
+                        }
+                    )
 
             # Explicit account OR single-mode -> call once
             if account is not None or not is_multi_mode():
-                return await fn(*args, **kwargs)
+                label = account or (next(iter(clients)) if clients else "default")
+                async with _client_locks.hold(label):
+                    await _acquire_client_controls(label)
+                    return await run_with_policy(
+                        lambda: fn(*args, **kwargs),
+                        settings,
+                        retry_network=readonly,
+                        retry_flood=readonly,
+                    )
 
             # account is None AND multi-mode
             if not readonly:
@@ -519,7 +584,14 @@ def with_account(readonly=False):
             async def _call_for(label):
                 kw = dict(kwargs)
                 kw["account"] = label
-                return label, await fn(*args, **kw)
+                async with _client_locks.hold(label):
+                    await _acquire_client_controls(label)
+                    return label, await run_with_policy(
+                        lambda: fn(*args, **kw),
+                        settings,
+                        retry_network=True,
+                        retry_flood=True,
+                    )
 
             results = await asyncio.gather(*(_call_for(label) for label in clients))
             if all(isinstance(result, str) for _, result in results):
@@ -1572,7 +1644,7 @@ def _is_roots_unsupported_error(error: Exception) -> bool:
 def _coerce_paths_from_list_roots_validation_error(error: Exception) -> List[Path]:
     """Recover absolute filesystem roots when a client sends bare paths.
 
-    Some MCP clients (notably Cursor) return workspace roots as plain absolute
+    Some MCP clients return workspace roots as plain absolute
     paths instead of ``file://`` URIs. The MCP SDK then fails pydantic validation
     of ``ListRootsResult`` even though the roots themselves are usable. Extract
     those paths from the validation error payload so file-path tools keep working.

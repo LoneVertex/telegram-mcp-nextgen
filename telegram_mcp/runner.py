@@ -113,7 +113,7 @@ async def _serve(transport: str) -> None:
     connection while multiple local MCP clients connect over HTTP, instead of
     each client spawning its own Telethon session (which Telegram
     throttles/flags). "http" is streamable HTTP — the current MCP transport
-    that Claude Code (`--transport http`) and Codex (`--url`) speak natively;
+    that common MCP clients speak natively;
     "sse" is kept for clients that only support the legacy SSE transport.
     """
     if transport in ("http", "sse"):
@@ -131,6 +131,11 @@ async def _serve(transport: str) -> None:
 
 async def _main() -> None:
     try:
+        if not clients:
+            raise RuntimeError(
+                "No Telegram session configured. Set TELEGRAM_SESSION_STRING or "
+                "TELEGRAM_SESSION_NAME before starting the MCP server."
+            )
         labels = ", ".join(clients.keys())
         print(f"Starting {len(clients)} Telegram client(s) ({labels})...", file=sys.stderr)
         await asyncio.gather(
@@ -189,7 +194,18 @@ async def _main() -> None:
 
 
 def main() -> None:
+    if any(argument in {"--help", "-h"} for argument in sys.argv[1:]):
+        print(
+            "telegram-mcp [ALLOWED_ROOT ...]\n\n"
+            "Environment: TELEGRAM_API_ID, TELEGRAM_API_HASH, "
+            "TELEGRAM_SESSION_STRING, TELEGRAM_MCP_TIER, "
+            "TELEGRAM_SEND_ENABLED, TELEGRAM_DESTRUCTIVE_ENABLED.\n"
+            "Default tier: core; default transport: stdio."
+        )
+        return
     _configure_allowed_roots_from_cli(sys.argv[1:])
+    tier = os.getenv("TELEGRAM_MCP_TIER", "core")
+    apply_tool_tier(mcp, tier)
     _runtime._apply_exposed_tools_mode()
     asyncio.run(_main())
 

@@ -903,7 +903,7 @@ def _ctx_with_list_roots_error(error: Exception):
 
 
 def test_coerce_paths_from_list_roots_validation_error_recovers_bare_paths(tmp_path):
-    """Cursor-style bare absolute paths appear as pydantic url_parsing inputs."""
+    """Bare absolute paths can appear as pydantic url_parsing inputs."""
     from pydantic import ValidationError
     from mcp.types import ListRootsResult
 

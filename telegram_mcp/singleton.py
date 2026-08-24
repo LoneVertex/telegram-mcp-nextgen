@@ -1,7 +1,7 @@
 """Per-session file lock guarding against concurrent Telegram connections.
 
-MCP clients (Claude Desktop in particular) sometimes spawn more than one
-instance of this server for the same configured session -- most commonly
+MCP clients can sometimes spawn more than one instance of this server
+for the same configured session -- most commonly
 when a connector is restarted and the old process hasn't exited yet before
 the new one starts. Two processes calling ``TelegramClient.connect()`` /
 ``start()`` with the same auth key at the same time trips Telegram's abuse

@@ -1,7 +1,11 @@
 """Telegram MCP server package."""
 
+from typing import Any
 
-def __getattr__(name: str):
+__version__ = "4.0.0"
+
+
+def __getattr__(name: str) -> Any:
     if name == "mcp":
         from telegram_mcp.install_guard import assert_safe_distribution
 
@@ -12,4 +16,4 @@ def __getattr__(name: str):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
-__all__ = ["mcp"]
+__all__ = ["__version__", "mcp"]
