@@ -26,8 +26,8 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.0.0-py3-none-any.whl` | `dff829f5cc7a302468632f7f2798396f858d8e3e1eeda39bba7d1c2afdad2fa7` |
-| `telegram_mcp-4.0.0.tar.gz` | `fc5cd3800f17878aba109b576462f376fc6a8b76af4408b490e3c87daeb2b1ae` |
+| `telegram_mcp-4.0.0-py3-none-any.whl` | `1da52dab2a540abfae3d88d48a5aa0564fafe883a212aa97f6ed63e1feb6f285` |
+| `telegram_mcp-4.0.0.tar.gz` | `ee51328dbe35a784650f64e0587950a8b1dea6e42ec0bf3af4500d226ffb2583` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 
