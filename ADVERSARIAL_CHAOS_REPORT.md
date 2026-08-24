@@ -33,8 +33,8 @@ Final package hashes:
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.0.0-py3-none-any.whl` | `a42e7ee5492d63df510ae1aca147916bcc63bb4680873e9e5427bb259d6772b8` |
-| `telegram_mcp-4.0.0.tar.gz` | `a90087b6d5c499a5c08067aa54052b49ce0551df0847d714c0c09e0e2ba52ece` |
+| `telegram_mcp-4.0.0-py3-none-any.whl` | `5644cc1fe68ec58859314e1250362acee6a2ee84e6e363e0e928ab1b353e6bf4` |
+| `telegram_mcp-4.0.0.tar.gz` | `7b222e568875d89666e7b62bbac93b9c10ccdd0b3f0c951064775c8077e883f0` |
 
 ## Confirmed weaknesses and patches
 

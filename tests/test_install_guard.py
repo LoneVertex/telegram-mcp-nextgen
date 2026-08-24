@@ -182,7 +182,7 @@ def test_install_guard_allows_fork_distribution_with_direct_url(monkeypatch):
 
 def test_install_guard_allows_explicit_trusted_artifact_override(monkeypatch):
     class FakeDistribution:
-        version = "4.0.0"
+        version = "4.0.1"
 
         def __init__(self):
             self.metadata = Message()

@@ -36,6 +36,7 @@ jobs:
           cache: pip
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
+      - run: pip install -e .
       - run: pytest -q --cov=telegram_mcp.config --cov=telegram_mcp.core --cov=telegram_mcp.db --cov=telegram_mcp.models --cov-report=term-missing --cov-report=xml
       - uses: actions/upload-artifact@v4
         if: matrix.python-version == '3.12'
@@ -60,6 +61,7 @@ jobs:
           cache: pip
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
+      - run: pip install -e .
       - run: ruff check telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models telegram_mcp/tools/cache.py tests/test_nextgen_core.py tests/test_nextgen_tools.py
       - run: mypy --explicit-package-bases telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models
       - run: python -m compileall -q telegram_mcp main.py sanitize.py session_string_generator.py

@@ -10,7 +10,6 @@ import re
 import tempfile
 from collections.abc import AsyncIterator, Iterable
 from pathlib import Path
-from typing import cast
 
 from ..config import Settings
 
@@ -122,4 +121,4 @@ async def atomic_write_bytes(root: Path, raw_path: str, chunks: AsyncIterator[by
 
 def settings_media_root(settings: Settings) -> Path:
     assert settings.media_dir is not None
-    return cast(Path, settings.media_dir)
+    return settings.media_dir

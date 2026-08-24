@@ -8,7 +8,7 @@ Project governance: [Contributing](CONTRIBUTING.md) · [Security Policy](SECURIT
 
 ## What is included
 
-The implementation registers **128 tools**: the upstream 125 tools covering accounts, chats, contacts, messages, groups, media, profiles, folders, and incoming events, plus `cache_health`, `search_cached_messages`, and `sync_chat_cache`. The upstream provenance is preserved at commit `52cca204d945e4ec292801a9d972334c0c2a4b63`; the next-generation package is version `4.0.0`.
+The implementation registers **128 tools**: the upstream 125 tools covering accounts, chats, contacts, messages, groups, media, profiles, folders, and incoming events, plus `cache_health`, `search_cached_messages`, and `sync_chat_cache`. The upstream provenance is preserved at commit `52cca204d945e4ec292801a9d972334c0c2a4b63`; the next-generation package is version `4.0.1`.
 
 | Tier | Purpose | Default |
 |---|---|---|
