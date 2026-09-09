@@ -4,7 +4,13 @@ from telegram_mcp.runtime import *
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Create Group", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Create Group",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("user_ids")
@@ -70,7 +76,11 @@ async def create_group(title: str, user_ids: List[Union[int, str]], account: str
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Invite To Group", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Invite To Group",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -165,7 +175,11 @@ async def invite_to_group(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Leave Chat", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Leave Chat",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -251,7 +265,13 @@ async def leave_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Participants", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Participants",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -317,7 +337,13 @@ async def get_participants(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Create Channel", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Create Channel",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 async def create_channel(
@@ -343,7 +369,11 @@ async def create_channel(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Edit Chat Title", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Edit Chat Title",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -371,7 +401,11 @@ async def edit_chat_title(chat_id: Union[int, str], title: str, account: str = N
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Edit Chat Photo", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Edit Chat Photo",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -418,9 +452,10 @@ async def edit_chat_photo(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Edit Chat About",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -452,7 +487,11 @@ async def edit_chat_about(chat_id: Union[int, str], about: str, account: str = N
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Delete Chat Photo", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Delete Chat Photo",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -487,7 +526,11 @@ async def delete_chat_photo(chat_id: Union[int, str], account: str = None) -> st
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Promote Admin", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Promote Admin",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -567,7 +610,11 @@ async def promote_admin(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Demote Admin", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Demote Admin",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -627,7 +674,11 @@ async def demote_admin(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Ban User", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Ban User",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -682,7 +733,11 @@ async def ban_user(chat_id: Union[int, str], user_id: Union[int, str], account: 
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Unban User", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Unban User",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -742,9 +797,10 @@ async def unban_user(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Set Default Chat Permissions",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -822,9 +878,10 @@ async def set_default_chat_permissions(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Toggle Slow Mode",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -860,9 +917,10 @@ async def toggle_slow_mode(chat_id: Union[int, str], seconds: int = 0, account: 
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Edit Admin Rights",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -945,7 +1003,15 @@ async def edit_admin_rights(
         return log_and_format_error("edit_admin_rights", e, chat_id=chat_id, user_id=user_id)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get Admins", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get Admins",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def get_admins(chat_id: Union[int, str], account: str = None) -> str:
@@ -978,7 +1044,13 @@ async def get_admins(chat_id: Union[int, str], account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Banned Users", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Banned Users",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1012,7 +1084,13 @@ async def get_banned_users(chat_id: Union[int, str], account: str = None) -> str
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Invite Link", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Invite Link",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1061,7 +1139,11 @@ async def get_invite_link(chat_id: Union[int, str], account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Join Chat By Link", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Join Chat By Link",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1111,7 +1193,13 @@ async def join_chat_by_link(link: str, account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Export Chat Invite", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Export Chat Invite",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1151,7 +1239,11 @@ async def export_chat_invite(chat_id: Union[int, str], account: str = None) -> s
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Import Chat Invite", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Import Chat Invite",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1214,7 +1306,13 @@ async def import_chat_invite(hash: str, account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Recent Actions", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Recent Actions",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")

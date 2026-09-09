@@ -310,7 +310,15 @@ def format_message_line(msg) -> str:
     return " | ".join(parts) + f" | Message: {safe_text}"
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get Messages", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def get_messages(
@@ -389,7 +397,13 @@ async def _edit_rich(cl, entity, message_id: int, text: str, parse_mode: str):
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Send Message", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Send Message",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -428,9 +442,10 @@ async def send_message(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Send Scheduled Message",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=False,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -493,7 +508,11 @@ async def send_scheduled_message(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Get Scheduled Messages", openWorldHint=True, readOnlyHint=True
+        title="Get Scheduled Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=True)
@@ -532,7 +551,11 @@ async def get_scheduled_messages(chat_id: Union[int, str], account: str = None) 
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Delete Scheduled Message", openWorldHint=True, destructiveHint=True
+        title="Delete Scheduled Message",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -568,7 +591,13 @@ async def delete_scheduled_message(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="List Inline Buttons", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="List Inline Buttons",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -659,7 +688,11 @@ async def list_inline_buttons(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Press Inline Button", openWorldHint=True, destructiveHint=True
+        title="Press Inline Button",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -807,7 +840,13 @@ async def press_inline_button(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="List Messages", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="List Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -955,7 +994,13 @@ async def list_messages(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Message Context", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Message Context",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1054,7 +1099,13 @@ async def get_message_context(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Forward Message", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Forward Message",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("from_chat_id", "to_chat_id")
@@ -1138,7 +1189,11 @@ async def forward_message(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Forward Messages (batch)", openWorldHint=True, destructiveHint=True
+        title="Forward Messages (batch)",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1190,7 +1245,11 @@ async def forward_messages(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Edit Message", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Edit Message",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1235,7 +1294,11 @@ async def edit_message(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Delete Message", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Delete Message",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1256,9 +1319,10 @@ async def delete_message(chat_id: Union[int, str], message_id: int, account: str
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Delete Chat History",
-        openWorldHint=True,
+        readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=False,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1303,9 +1367,10 @@ async def delete_chat_history(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Delete Messages Bulk",
-        openWorldHint=True,
+        readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1354,7 +1419,11 @@ async def delete_messages_bulk(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Pin Message", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Pin Message",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1374,7 +1443,11 @@ async def pin_message(chat_id: Union[int, str], message_id: int, account: str = 
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Unpin Message", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Unpin Message",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1395,9 +1468,10 @@ async def unpin_message(chat_id: Union[int, str], message_id: int, account: str 
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Unpin All Messages",
-        openWorldHint=True,
+        readOnlyHint=False,
         destructiveHint=True,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1423,7 +1497,11 @@ async def unpin_all_messages(chat_id: Union[int, str], account: str = None) -> s
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Mark As Read", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Mark As Read",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1442,7 +1520,13 @@ async def mark_as_read(chat_id: Union[int, str], account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Reply To Message", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Reply To Message",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -1478,7 +1562,13 @@ async def reply_to_message(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Search Messages", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Search Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1519,8 +1609,10 @@ async def search_messages(
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Search Global Messages",
-        openWorldHint=True,
         readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=True)
@@ -1565,7 +1657,15 @@ async def search_global(
         )
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get History", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get History",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def get_history(chat_id: Union[int, str], limit: int = 100, account: str = None) -> str:
@@ -1586,7 +1686,13 @@ async def get_history(chat_id: Union[int, str], limit: int = 100, account: str =
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Pinned Messages", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Pinned Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1636,7 +1742,13 @@ async def get_pinned_messages(chat_id: Union[int, str], account: str = None) -> 
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Create Poll", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Create Poll",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 async def create_poll(
@@ -1718,7 +1830,11 @@ async def create_poll(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Send Reaction", openWorldHint=True, destructiveHint=False, idempotentHint=True
+        title="Send Reaction",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1764,7 +1880,11 @@ async def send_reaction(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Remove Reaction", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Remove Reaction",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1799,7 +1919,11 @@ async def remove_reaction(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Get Message Reactions", openWorldHint=True, readOnlyHint=True, idempotentHint=True
+        title="Get Message Reactions",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=True)
@@ -1873,7 +1997,11 @@ async def get_message_reactions(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Save Draft", openWorldHint=True, destructiveHint=False, idempotentHint=True
+        title="Save Draft",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -1921,7 +2049,15 @@ async def save_draft(
         return log_and_format_error("save_draft", e, chat_id=chat_id)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get Drafts", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get Drafts",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 async def get_drafts(account: str = None) -> str:
     """
@@ -1985,7 +2121,11 @@ async def get_drafts(account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Clear Draft", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Clear Draft",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -2026,6 +2166,7 @@ __all__ = [
     "list_messages",
     "get_message_context",
     "forward_message",
+    "forward_messages",
     "edit_message",
     "delete_message",
     "delete_chat_history",

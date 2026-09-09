@@ -17,7 +17,15 @@ PHOTO_IDENTIFIER_SEARCH_DEPTH = 100
 PHOTO_SHEET_MAXIMUM_TILES = 12
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Send File", openWorldHint=True, destructiveHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Send File",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=False)
 @validate_id("chat_id")
 async def send_file(
@@ -100,7 +108,13 @@ async def _send_album(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Send Album", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Send Album",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -145,7 +159,13 @@ async def send_album(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Download Media", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Download Media",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -212,7 +232,13 @@ async def download_media(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Send Voice", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Send Voice",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -263,7 +289,13 @@ async def send_voice(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Upload File", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Upload File",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 async def upload_file(file_path: str, ctx: Optional[Context] = None, account: str = None) -> str:
@@ -297,7 +329,13 @@ async def upload_file(file_path: str, ctx: Optional[Context] = None, account: st
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Media Info", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Media Info",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -323,7 +361,13 @@ async def get_media_info(chat_id: Union[int, str], message_id: int, account: str
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Sticker Sets", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Sticker Sets",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def get_sticker_sets(account: str = None) -> str:
@@ -342,7 +386,13 @@ async def get_sticker_sets(account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Send Sticker", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Send Sticker",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -382,7 +432,13 @@ async def send_sticker(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Gif Search", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Gif Search",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def get_gif_search(query: str, limit: int = 10, account: str = None) -> str:
@@ -442,7 +498,15 @@ async def get_gif_search(query: str, limit: int = 10, account: str = None) -> st
         return log_and_format_error("get_gif_search", e, query=query, limit=limit)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Send Gif", openWorldHint=True, destructiveHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Send Gif",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=False)
 @validate_id("chat_id")
 async def send_gif(
@@ -473,7 +537,15 @@ async def send_gif(
         )
 
 
-@mcp.tool(annotations=ToolAnnotations(title="List Photos", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="List Photos",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def list_photos(
@@ -530,7 +602,15 @@ async def list_photos(
         return log_and_format_error("list_photos", e, chat_id=chat_id, source=source, limit=limit)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Open Photo", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Open Photo",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def open_photo(
@@ -601,7 +681,13 @@ async def open_photo(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Photo Sheet", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Photo Sheet",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")

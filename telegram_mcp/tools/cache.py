@@ -62,7 +62,15 @@ def _message_row(chat_id: int, message: Any) -> dict[str, Any]:
     }
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Cache Health", readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Cache Health",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    )
+)
 async def cache_health() -> dict[str, Any]:
     """Return local SQLite/FTS5 integrity and active tier diagnostics."""
     await _repo_async()
@@ -71,7 +79,15 @@ async def cache_health() -> dict[str, Any]:
     return {"status": "ok", "database": integrity, "tier": settings.tier}
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Search Cached Messages", readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Search Cached Messages",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    )
+)
 async def search_cached_messages(chat_id: int, query: str, limit: int = 20, offset: int = 0) -> list[dict[str, Any]]:
     """Search the local FTS5 archive without making a Telegram request."""
     if chat_id == 0 or not query.strip():
@@ -82,7 +98,15 @@ async def search_cached_messages(chat_id: int, query: str, limit: int = 20, offs
     return await asyncio.to_thread(repository.search, chat_id, query, limit, offset)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Sync Local Cache", readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Sync Local Cache",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 async def sync_chat_cache(
     chat_id: int,

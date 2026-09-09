@@ -153,7 +153,15 @@ class CreateForumTopicRequest(TLRequest):
         )
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get Chats", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get Chats",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 async def get_chats(account: str = None, page: int = 1, page_size: int = 20) -> str:
     """
@@ -191,9 +199,10 @@ async def get_chats(account: str = None, page: int = 1, page_size: int = 20) -> 
 @mcp.tool(
     annotations=ToolAnnotations(
         title="Subscribe Public Channel",
-        openWorldHint=True,
-        destructiveHint=True,
+        readOnlyHint=False,
+        destructiveHint=False,
         idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -223,7 +232,15 @@ async def subscribe_public_channel(channel: Union[int, str], account: str = None
         return log_and_format_error("subscribe_public_channel", e, channel=channel)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="List Topics", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="List Topics",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 async def list_topics(
     chat_id: int,
@@ -316,7 +333,11 @@ async def list_topics(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Enable Forum Topics", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Enable Forum Topics",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -359,7 +380,11 @@ async def enable_forum_topics(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Create Forum Topic", openWorldHint=True, destructiveHint=True
+        title="Create Forum Topic",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -447,7 +472,15 @@ def _extract_created_topic_id(result) -> Optional[int]:
     return None
 
 
-@mcp.tool(annotations=ToolAnnotations(title="List Chats", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="List Chats",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 async def list_chats(
     chat_type: str = None,
@@ -591,7 +624,15 @@ async def list_chats(
         )
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Get Chat", openWorldHint=True, readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Get Chat",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=True)
 @validate_id("chat_id")
 async def get_chat(chat_id: Union[int, str], account: str = None) -> str:
@@ -694,7 +735,13 @@ async def get_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Search Public Chats", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Search Public Chats",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def search_public_chats(query: str, limit: int = 20, account: str = None) -> str:
@@ -712,7 +759,13 @@ async def search_public_chats(query: str, limit: int = 20, account: str = None) 
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Resolve Username", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Resolve Username",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def resolve_username(username: str, account: str = None) -> str:
@@ -729,7 +782,13 @@ async def resolve_username(username: str, account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Full Chat", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Full Chat",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def get_full_chat(chat_id: Union[int, str], account: str = None) -> str:
@@ -785,7 +844,11 @@ async def get_full_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Mute Chat", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Mute Chat",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -830,7 +893,11 @@ async def mute_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Unmute Chat", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Unmute Chat",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -875,7 +942,11 @@ async def unmute_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Archive Chat", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Archive Chat",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -900,7 +971,11 @@ async def archive_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Unarchive Chat", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Unarchive Chat",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -924,7 +999,13 @@ async def unarchive_chat(chat_id: Union[int, str], account: str = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Common Chats", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Common Chats",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("user_id")
@@ -981,7 +1062,13 @@ async def get_common_chats(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Message Read By", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Message Read By",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")
@@ -1072,7 +1159,13 @@ async def get_message_read_by(
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Message Link", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Message Link",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("chat_id")

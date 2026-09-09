@@ -130,6 +130,10 @@ def no_sleep(monkeypatch):
         return None
 
     monkeypatch.setattr(runner.asyncio, "sleep", _noop)
+    yield
+    for lock in list(runner._session_locks.values()):
+        lock.release()
+    runner._session_locks.clear()
 
 
 @pytest.mark.asyncio

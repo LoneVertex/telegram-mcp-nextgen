@@ -5,7 +5,13 @@ from typing import Optional
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="List Contacts", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="List Contacts",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def list_contacts(account: Optional[str] = None) -> str:
@@ -41,7 +47,13 @@ async def list_contacts(account: Optional[str] = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Search Contacts", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Search Contacts",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def search_contacts(query: str, account: Optional[str] = None) -> str:
@@ -93,7 +105,13 @@ async def search_contacts(query: str, account: Optional[str] = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Contact Ids", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Contact Ids",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def get_contact_ids(account: Optional[str] = None) -> str:
@@ -113,7 +131,11 @@ async def get_contact_ids(account: Optional[str] = None) -> str:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Get Direct Chat By Contact", openWorldHint=True, readOnlyHint=True
+        title="Get Direct Chat By Contact",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=True)
@@ -179,7 +201,13 @@ async def get_direct_chat_by_contact(contact_query: str, account: Optional[str] 
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Contact Chats", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Contact Chats",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 @validate_id("contact_id")
@@ -247,7 +275,11 @@ async def get_contact_chats(contact_id: Union[int, str], account: Optional[str] 
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Get Last Interaction", openWorldHint=True, readOnlyHint=True
+        title="Get Last Interaction",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=True)
@@ -301,7 +333,11 @@ async def get_last_interaction(contact_id: Union[int, str], account: Optional[st
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Add Contact", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Add Contact",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -438,7 +474,11 @@ async def add_contact(
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Delete Contact", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Delete Contact",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -460,7 +500,11 @@ async def delete_contact(user_id: Union[int, str], account: Optional[str] = None
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Block User", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Block User",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -482,7 +526,11 @@ async def block_user(user_id: Union[int, str], account: Optional[str] = None) ->
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Unblock User", openWorldHint=True, destructiveHint=True, idempotentHint=True
+        title="Unblock User",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
     )
 )
 @with_account(readonly=False)
@@ -503,7 +551,13 @@ async def unblock_user(user_id: Union[int, str], account: Optional[str] = None) 
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Import Contacts", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Import Contacts",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 async def import_contacts(contacts: list, account: Optional[str] = None) -> str:
@@ -529,7 +583,13 @@ async def import_contacts(contacts: list, account: Optional[str] = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Export Contacts", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Export Contacts",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def export_contacts(account: Optional[str] = None) -> str:
@@ -547,7 +607,13 @@ async def export_contacts(account: Optional[str] = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Get Blocked Users", openWorldHint=True, readOnlyHint=True)
+    annotations=ToolAnnotations(
+        title="Get Blocked Users",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=True)
 async def get_blocked_users(account: Optional[str] = None) -> str:
@@ -564,7 +630,13 @@ async def get_blocked_users(account: Optional[str] = None) -> str:
 
 
 @mcp.tool(
-    annotations=ToolAnnotations(title="Send Contact", openWorldHint=True, destructiveHint=True)
+    annotations=ToolAnnotations(
+        title="Send Contact",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=False,
+        openWorldHint=True,
+    )
 )
 @with_account(readonly=False)
 @validate_id("chat_id")
@@ -610,7 +682,15 @@ async def send_contact(
         return log_and_format_error("send_contact", e, chat_id=chat_id, phone_number=phone_number)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Set Contact Alias", openWorldHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Set Contact Alias",
+        readOnlyHint=False,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=False)
 async def set_contact_alias(
     alias: str, chat_id: str, replace: bool = False, account: Optional[str] = None
@@ -732,7 +812,15 @@ async def set_contact_alias(
         return log_and_format_error("set_contact_alias", e, alias=alias, chat_id=chat_id)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="List Contact Aliases", readOnlyHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="List Contact Aliases",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    )
+)
 @with_account(readonly=True)
 async def list_contact_aliases(account: Optional[str] = None) -> str:
     """
@@ -759,7 +847,15 @@ async def list_contact_aliases(account: Optional[str] = None) -> str:
         return log_and_format_error("list_contact_aliases", e)
 
 
-@mcp.tool(annotations=ToolAnnotations(title="Delete Contact Alias", openWorldHint=True))
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Delete Contact Alias",
+        readOnlyHint=False,
+        destructiveHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
+    )
+)
 @with_account(readonly=False)
 async def delete_contact_alias(alias: str, account: Optional[str] = None) -> str:
     """
