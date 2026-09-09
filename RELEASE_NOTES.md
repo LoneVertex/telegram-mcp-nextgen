@@ -1,5 +1,15 @@
 # Release Notes
 
+## 4.1.0 — 100% tool coverage and complete hint annotations
+
+This minor release completes MCP tool metadata and unit test coverage across the entire 128-tool Telegram capability surface:
+
+- **Complete MCP Tool Hint Annotations:** Every single tool across all 10 domain modules (`accounts`, `admin`, `cache`, `chats`, `contacts`, `events`, `folders`, `media`, `messages`, `profile`) now declares explicit boolean values for all 4 MCP tool hints: `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint`.
+- **100% Tool Test Coverage:** Added comprehensive coverage testing in `tests/test_all_tools_coverage.py`, asserting registration, schema generation, docstrings, and complete hints across all 128 tools (increasing the test suite to 506 passing tests).
+- **Tool Export Parity:** Added `forward_messages` to `telegram_mcp.tools.messages.__all__` export list for full namespace completeness.
+- **Test Session Safety:** Added an explicit cleanup fixture in `tests/test_session_pool.py` ensuring process-wide session locks are released during test suite teardown.
+- **M8ven Trust Verification:** Integrated M8ven Verified and Trust Score badges in documentation.
+
 ## 4.0.1 — CI and publication maintenance
 
 This patch release keeps the Telegram MCP runtime and 128-tool compatibility surface unchanged while correcting public-release automation. GitHub Actions now installs the repository in editable mode before collecting tests, and the typed filesystem helper no longer contains a redundant cast that failed the CI type gate.
