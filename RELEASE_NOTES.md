@@ -1,5 +1,15 @@
 # Release Notes
 
+## 4.1.1 — Glama registry manifest, TDQS schema enrichment, and container inspection
+
+This patch release adds full compatibility and quality verification for the Glama MCP registry:
+
+- **Glama Server Manifest:** Added `glama.json` ownership verification manifest conforming to Glama server schema.
+- **100% Parameter Schema Coverage (TDQS):** Implemented schema enrichment populating typed parameter descriptions across all 411 parameters and 128 tools, alongside human-readable tool titles satisfying `titleIsMeaningful`.
+- **Sibling Tool Disambiguation:** Added explicit cross-tool guidance and boundary constraints across related tool families (`search_messages`, `search_global`, `search_cached_messages`, `sync_chat_history`, `sync_chat_cache`).
+- **Headless Container Inspection Support:** Added unauthenticated inspection mode in `telegram_mcp.runner` allowing automated registry VMs to run MCP `initialize` and `tools/list` handshakes cleanly without credentials.
+- **Container Path & Log Alignment:** Added unprivileged runtime log fallback to `settings.data_dir` and enabled `TELEGRAM_MCP_ALLOW_INSTALLED=1` in container manifests.
+
 ## 4.1.0 — 100% tool coverage and complete hint annotations
 
 This minor release completes MCP tool metadata and unit test coverage across the entire 128-tool Telegram capability surface:
