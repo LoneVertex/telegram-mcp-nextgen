@@ -2,6 +2,7 @@
 
 [![M8ven Verified](https://m8ven.ai/badge/mcp/lonevertex/telegram-mcp-nextgen?variant=verified)](https://m8ven.ai/mcp/lonevertex/telegram-mcp-nextgen)
 [![M8ven Score](https://m8ven.ai/badge/mcp/lonevertex/telegram-mcp-nextgen)](https://m8ven.ai/mcp/lonevertex/telegram-mcp-nextgen)
+[![Telegram MCP — Next Generation MCP server – quality and maintenance score on Glama](https://glama.ai/mcp/servers/LoneVertex/telegram-mcp-nextgen/badges/score.svg)](https://glama.ai/mcp/servers/LoneVertex/telegram-mcp-nextgen)
 
 A production-oriented Telegram integration for MCP-compatible clients, maintained by LoneVertex and built on [Telethon](https://docs.telethon.dev/) and the [Model Context Protocol](https://modelcontextprotocol.io/). This repository preserves the upstream Telegram capability surface while adding explicit tool tiers, fail-closed mutation controls, keyed concurrency limits, bounded retries, local SQLite/FTS5 caching, safer media paths, package entrypoints, and reproducible CI.
 

@@ -496,6 +496,11 @@ async def _acquire_client_controls(label: str) -> None:
 
 def get_client(account: str = None) -> TelegramClient:
     """Resolve account label to TelegramClient."""
+    if not clients:
+        raise ValueError(
+            "No Telegram account configured. Set TELEGRAM_SESSION_STRING or "
+            "TELEGRAM_SESSION_NAME before calling this tool."
+        )
     if account is None:
         if len(clients) == 1:
             return next(iter(clients.values()))
@@ -562,6 +567,16 @@ def with_account(readonly=False):
                             "message": "Destructive operations are disabled by configuration.",
                         }
                     )
+
+            if not clients:
+                tool_name = getattr(fn, "__name__", "unknown")
+                return json.dumps(
+                    {
+                        "error": "NotConfigured",
+                        "tool": tool_name,
+                        "message": "No Telegram account configured. Set TELEGRAM_SESSION_STRING or TELEGRAM_SESSION_NAME in environment.",
+                    }
+                )
 
             # Explicit account OR single-mode -> call once
             if account is not None or not is_multi_mode():
@@ -689,10 +704,22 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.ERROR)  # Set to ERROR for production, INFO for debugging
 
 # Create file handler with absolute path. Keep the legacy location next to
-# top-level main.py, even though runtime code now lives inside telegram_mcp/.
+# top-level main.py when writable, or fall back to settings.data_dir in containerized/packaged environments.
 package_dir = os.path.dirname(os.path.abspath(__file__))
 script_dir = os.path.dirname(package_dir)
-log_file_path = os.path.join(script_dir, "mcp_errors.log")
+log_file_path = os.getenv("TELEGRAM_LOG_PATH")
+if not log_file_path:
+    candidate_path = os.path.join(script_dir, "mcp_errors.log")
+    try:
+        if os.access(script_dir, os.W_OK) or (
+            os.path.exists(candidate_path) and os.access(candidate_path, os.W_OK)
+        ):
+            log_file_path = candidate_path
+        else:
+            settings.ensure_directories()
+            log_file_path = str(settings.data_dir / "mcp_errors.log")
+    except Exception:
+        log_file_path = candidate_path
 
 try:
     file_handler = logging.FileHandler(log_file_path, mode="a")  # Append mode
@@ -715,10 +742,8 @@ try:
     logger.addHandler(file_handler)
     logger.info(f"Logging initialized to {log_file_path}")
 except Exception as log_error:
-    print(f"WARNING: Error setting up log file: {log_error}", file=sys.stderr)
-    # Fallback to console-only logging
+    # Fallback to console-only logging without writing to stdout/stderr noisy warnings
     logger.addHandler(console_handler)
-    logger.error(f"Failed to set up log file handler: {log_error}")
 
 
 # File-path tool security configuration

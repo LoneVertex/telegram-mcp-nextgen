@@ -17,7 +17,8 @@ ENV PYTHONUNBUFFERED=1 \
     TELEGRAM_MCP_TIER=core \
     TELEGRAM_SEND_ENABLED=false \
     TELEGRAM_DESTRUCTIVE_ENABLED=false \
-    TELEGRAM_DATA_DIR=/var/lib/telegram-mcp
+    TELEGRAM_DATA_DIR=/var/lib/telegram-mcp \
+    TELEGRAM_MCP_ALLOW_INSTALLED=1
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 RUN python -m pip install --no-cache-dir /wheels/*.whl && \

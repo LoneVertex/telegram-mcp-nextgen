@@ -132,37 +132,47 @@ async def _serve(transport: str) -> None:
 async def _main() -> None:
     try:
         if not clients:
-            raise RuntimeError(
-                "No Telegram session configured. Set TELEGRAM_SESSION_STRING or "
-                "TELEGRAM_SESSION_NAME before starting the MCP server."
+            print(
+                "Notice: No Telegram session configured. MCP server is running in "
+                "offline/inspection mode. Set TELEGRAM_SESSION_STRING or "
+                "TELEGRAM_SESSION_NAME to connect Telegram accounts.",
+                file=sys.stderr,
             )
-        labels = ", ".join(clients.keys())
-        print(f"Starting {len(clients)} Telegram client(s) ({labels})...", file=sys.stderr)
-        await asyncio.gather(
-            *(_connect_authorized_client(label, cl) for label, cl in clients.items())
-        )
+        else:
+            labels = ", ".join(clients.keys())
+            print(f"Starting {len(clients)} Telegram client(s) ({labels})...", file=sys.stderr)
+            await asyncio.gather(
+                *(_connect_authorized_client(label, cl) for label, cl in clients.items())
+            )
 
-        # Warm entity caches — StringSession has no persistent cache,
-        # so fetch all dialogs once per client to populate them.
-        # Runs in background: blocking startup on this (e.g. under a
-        # GetDialogsRequest flood wait) makes MCP clients time out, and
-        # resolve_entity() re-warms the cache on miss anyway.
-        print("Warming entity caches (background)...", file=sys.stderr)
+            # Warm entity caches — StringSession has no persistent cache,
+            # so fetch all dialogs once per client to populate them.
+            # Runs in background: blocking startup on this (e.g. under a
+            # GetDialogsRequest flood wait) makes MCP clients time out, and
+            # resolve_entity() re-warms the cache on miss anyway.
+            print("Warming entity caches (background)...", file=sys.stderr)
 
-        async def _warm_caches() -> None:
-            try:
-                await asyncio.gather(*(cl.get_dialogs() for cl in clients.values()))
-                print("Entity caches warmed.", file=sys.stderr)
-            except Exception as warm_exc:
-                print(f"Entity cache warm failed: {warm_exc}", file=sys.stderr)
+            async def _warm_caches() -> None:
+                try:
+                    await asyncio.gather(*(cl.get_dialogs() for cl in clients.values()))
+                    print("Entity caches warmed.", file=sys.stderr)
+                except Exception as warm_exc:
+                    print(f"Entity cache warm failed: {warm_exc}", file=sys.stderr)
 
-        warm_task = asyncio.create_task(_warm_caches())
+            asyncio.create_task(_warm_caches())
 
         transport = os.getenv("MCP_TRANSPORT", "stdio").lower()
-        print(
-            f"Telegram client(s) started ({labels}). Running MCP server ({transport})...",
-            file=sys.stderr,
-        )
+        if clients:
+            labels = ", ".join(clients.keys())
+            print(
+                f"Telegram client(s) started ({labels}). Running MCP server ({transport})...",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"Running MCP server in inspection mode ({transport})...",
+                file=sys.stderr,
+            )
         await _serve(transport)
     except Exception as e:
         print(f"Error starting client: {e}", file=sys.stderr)
