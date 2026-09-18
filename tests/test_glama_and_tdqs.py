@@ -118,3 +118,40 @@ def test_schema_enricher_fallbacks():
     server2 = _FakeServer([short_tool])
     enrich_all_tools(server2)
     assert short_tool.title == "A Details"
+
+
+@pytest.mark.asyncio
+async def test_tdqs_descriptions_avoid_redundant_annotation_echoing():
+    """Ensure no tool descriptions repeat read-only annotations which Glama flags as a smell."""
+    enrich_all_tools(mcp)
+    tools = await mcp.list_tools()
+
+    flagged_tools = []
+    for tool in tools:
+        desc = tool.description or ""
+        if "read-only operation" in desc.lower():
+            flagged_tools.append((tool.name, desc))
+
+    assert not flagged_tools, f"Tools contain redundant 'read-only operation' boilerplate: {flagged_tools}"
+
+
+@pytest.mark.asyncio
+async def test_tdqs_critical_tools_include_sibling_routing():
+    """Ensure tools in crowded namespaces explicitly direct agents to sibling alternatives."""
+    enrich_all_tools(mcp)
+    tools = {tool.name: tool for tool in await mcp.list_tools()}
+
+    # get_contact_chats must route to general chat listing and full contact info
+    contact_chats_desc = tools["get_contact_chats"].description
+    assert "`list_chats`" in contact_chats_desc or "`get_chats`" in contact_chats_desc
+    assert "`get_chat`" in contact_chats_desc or "`get_full_chat`" in contact_chats_desc
+
+    # get_history must disambiguate from get_messages and list_messages
+    history_desc = tools["get_history"].description
+    assert "`get_messages`" in history_desc
+    assert "`list_messages`" in history_desc
+
+    # get_photo_sheet must reference list_photos and open_photo
+    photo_sheet_desc = tools["get_photo_sheet"].description
+    assert "`list_photos`" in photo_sheet_desc
+    assert "`open_photo`" in photo_sheet_desc

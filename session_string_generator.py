@@ -27,11 +27,13 @@ import io
 import os
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 from dotenv import load_dotenv
 from telethon import errors
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient
+
 from telegram_mcp.client_identity import client_identity_kwargs
 from telegram_mcp.install_guard import UnsafeInstallationError, assert_safe_distribution
 
@@ -39,6 +41,11 @@ from telegram_mcp.install_guard import UnsafeInstallationError, assert_safe_dist
 _QR_MAX_REFRESHES = 10
 
 load_dotenv()
+_state_env = Path(
+    os.getenv("TELEGRAM_ENV_FILE", Path.home() / ".local" / "state" / "telegram-mcp" / ".env")
+).expanduser()
+if _state_env.is_file():
+    load_dotenv(_state_env)
 
 
 def _parse_args() -> argparse.Namespace:
@@ -225,9 +232,16 @@ def main() -> None:
         except EOFError:
             choice = "n"
         if choice.lower() == "y":
+            env_target = (
+                Path(os.environ["TELEGRAM_ENV_FILE"]).expanduser()
+                if "TELEGRAM_ENV_FILE" in os.environ
+                else (_state_env if _state_env.is_file() else Path(".env"))
+            )
             try:
-                with open(".env", "r") as file:
-                    env_contents = file.readlines()
+                env_contents = []
+                if env_target.is_file():
+                    with open(env_target) as file:
+                        env_contents = file.readlines()
 
                 session_string_line_found = False
                 for i, line in enumerate(env_contents):
@@ -239,12 +253,12 @@ def main() -> None:
                 if not session_string_line_found:
                     env_contents.append(f"{env_var}={session_string}\n")
 
-                with open(".env", "w") as file:
+                with open(env_target, "w") as file:
                     file.writelines(env_contents)
 
-                print("\n.env file updated successfully!")
+                print(f"\n{env_target} updated successfully!")
             except Exception as e:
-                print(f"\nError updating .env file: {e}")
+                print(f"\nError updating {env_target}: {e}")
                 print("Please manually add the session string to your .env file.")
 
         client.disconnect()

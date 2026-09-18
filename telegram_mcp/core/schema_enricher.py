@@ -288,7 +288,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     "list_accounts": (
         "List all configured Telegram accounts with profile name, phone number, and online status. "
         "Use at session start to discover available account labels for multi-account routing. "
-        "Read-only operation with no side effects. Note: Returned names contain untrusted user content."
+        "Note: Returned names contain untrusted user content."
     ),
     "get_me": (
         "Retrieve detailed profile identity of the current Telegram user account (ID, name, username, phone). "
@@ -296,8 +296,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     ),
     "get_chats": (
         "Retrieve active dialogs and recent conversation summaries including last message and unread count. "
-        "Use for overview of recent chat activity. To search or list all chats comprehensively, use `list_chats`. "
-        "Read-only operation."
+        "Use for overview of recent chat activity. To search or list all chats comprehensively, use `list_chats`."
     ),
     "list_chats": (
         "List all accessible chats, groups, channels, and direct dialogs with pagination support. "
@@ -317,7 +316,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     ),
     "resolve_username": (
         "Resolve a public @username to its underlying Telegram entity ID and object type (User, Channel, Group). "
-        "Use before calling ID-based tools when only a username handle is known. Read-only operation."
+        "Use before calling ID-based tools when only a username handle is known."
     ),
     "get_messages": (
         "Retrieve paginated messages from a specific chat starting from an offset or limit. "
@@ -330,8 +329,9 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "For text keyword searching, use `search_messages`."
     ),
     "get_message_context": (
-        "Retrieve a surrounding window of messages before and after a target message ID in a chat. "
-        "Use when understanding conversational context around a specific event or quote. Read-only operation."
+        "Retrieve a surrounding window of messages immediately preceding and following a target message ID in a chat. "
+        "Use when reconstructing conversational context around a specific quote, event, or citation. "
+        "For general chat browsing, use `get_messages` or `list_messages`."
     ),
     "search_messages": (
         "Search for text keywords within a specific Telegram chat or supergroup. "
@@ -343,8 +343,10 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "Use when the target chat is unknown. If the chat is known, prefer `search_messages` for faster scoped results."
     ),
     "get_history": (
-        "Retrieve complete chronological message history from a chat up to the configured limit. "
-        "Use when ingesting or summarizing a conversation. Read-only operation."
+        "Retrieve full sequential message history from a chat in reverse chronological order up to the limit. "
+        "Use when ingesting, exporting, or summarizing complete conversation backlogs. "
+        "For paginated offset-based chunks, use `get_messages`. "
+        "For filtered retrieval by sender or date range, use `list_messages`."
     ),
     "get_pinned_messages": (
         "Retrieve all pinned announcements and pinned messages in a chat or supergroup. "
@@ -359,12 +361,16 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "Use when auditing or finding images sent in a conversation. To download, use `download_media`."
     ),
     "open_photo": (
-        "Inspect and view photo content from a chat. Returns image metadata and preview. "
-        "Use when analyzing an image in a conversation. For bulk photo galleries, use `get_photo_sheet`."
+        "Fetch, inspect, and preview a single photo from a chat by message ID or avatar reference. "
+        "Use when analyzing or saving a specific image in a conversation. "
+        "To browse photo metadata across messages, use `list_photos`. "
+        "For a multi-photo thumbnail grid, use `get_photo_sheet`."
     ),
     "get_photo_sheet": (
-        "Generate a visual contact sheet collage of recent photos from a chat. "
-        "Use for quick visual overviews of shared imagery without downloading each item individually."
+        "Generate a single composite thumbnail contact sheet grid assembling recent photos from a chat or user profile. "
+        "Use to visually survey multiple images at once in a single request. "
+        "To inspect photo message metadata individually, use `list_photos`. "
+        "To view a single photo in full resolution, use `open_photo`."
     ),
     "list_contacts": (
         "List all registered Telegram contacts in your account address book with IDs and phone numbers. "
@@ -383,20 +389,23 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "Use before sending a private message to confirm chat availability."
     ),
     "get_contact_chats": (
-        "Find all groups and channels shared between your account and a specific contact ID. "
-        "Use when inspecting mutual group memberships. Read-only operation."
+        "Find all mutual groups, channels, and direct dialogs shared between your account and a specific contact ID. "
+        "Use when auditing shared memberships or verifying mutual chat contexts with a contact. "
+        "To list all dialogs regardless of contact, use `list_chats` or `get_chats`. "
+        "To retrieve contact profile details, use `get_chat` or `get_full_chat`."
     ),
     "get_last_interaction": (
         "Get the timestamp and summary of the most recent interaction or message with a contact. "
-        "Use to check communication recency before initiating contact. Read-only operation."
+        "Use to check communication recency before initiating contact."
     ),
     "get_privacy_settings": (
         "Retrieve privacy rules and exception lists for account attributes (phone number, last seen, status). "
         "Use when auditing account security. To update privacy settings, use `set_privacy_settings`."
     ),
     "get_user_status": (
-        "Check the online presence, last seen status, and bot flags for a specific Telegram user. "
-        "Use before messaging to see if user is active. Read-only operation."
+        "Check the current online presence, exact last seen timestamp, and bot attributes for a specific user ID or username. "
+        "Use to verify whether a user is currently reachable before initiating contact. "
+        "To view complete profile bio, photo, and username metadata, use `get_chat` or `get_full_chat`."
     ),
     "get_bot_info": (
         "Inspect bot profile, command list, description, and capabilities for a specified bot. "
@@ -407,20 +416,27 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "Use when discovering folder organization. To see chats inside a folder, use `get_folder`."
     ),
     "get_folder": (
-        "Retrieve all chats and channels included within a specific dialog folder ID. "
-        "Use when navigating folder contents. To list available folders, use `list_folders`."
+        "Retrieve the list of chat, channel, and bot peers included within a specific Telegram dialog filter folder ID. "
+        "Use when inspecting dialogs grouped under a specific tab or categorization filter. "
+        "To discover all available folder IDs and their titles, use `list_folders`."
     ),
     "get_admins": (
-        "List all administrators and their permissions in a group or channel. "
-        "Use when verifying group moderation staff. Read-only operation."
+        "Retrieve the complete list of administrators and their granular permissions in a channel or supergroup. "
+        "Use when verifying moderation staff or administrative rights. "
+        "To review recent admin action logs, use `get_recent_actions`. "
+        "To view restricted or banned users, use `get_banned_users`."
     ),
     "get_banned_users": (
-        "List all banned and restricted members in a group or supergroup with restriction reasons. "
-        "Use when auditing group moderation. Requires admin permission in the target group."
+        "Retrieve the list of currently restricted, muted, or banned members in a supergroup or channel. "
+        "Use when auditing active moderation penalties. "
+        "To inspect who enacted bans, use `get_recent_actions`. "
+        "To ban a user, use `ban_user`. To unban, use `unban_user`."
     ),
     "get_recent_actions": (
-        "Retrieve the administrative audit log for a supergroup or channel (member bans, edits, admin changes). "
-        "Use when reviewing moderation actions. Requires admin privileges."
+        "Inspect the administrative audit log of recent channel or supergroup events (bans, title changes, member kicks, pin edits). "
+        "Use when investigating incident history or moderation changes. Requires admin privileges in the target chat. "
+        "To list current administrators, use `get_admins`. "
+        "To list currently restricted or banned members, use `get_banned_users`."
     ),
     "cache_health": (
         "Inspect local SQLite/FTS5 archive integrity, database size, and active tool tier diagnostics. "
@@ -431,8 +447,10 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
         "Use for instantaneous, rate-limit-free search over synchronized messages. To sync messages into cache first, use `sync_chat_cache`."
     ),
     "sync_chat_cache": (
-        "Synchronize a batch of recent messages from a chat into the local SQLite/FTS5 archive. "
-        "Use periodically to keep the offline cache fresh. Supports incremental mode (since last checkpoint) or full refresh."
+        "Synchronize remote Telegram chat messages into the local SQLite/FTS5 offline cache database. "
+        "Use before performing offline text searches or when populating local message archives. "
+        "To search already synced messages without Telegram API calls, use `search_cached_messages`. "
+        "To verify database integrity and index status, use `cache_health`."
     ),
     "send_message": (
         "Send a text message to a specified Telegram chat, group, channel, or user. "
@@ -482,7 +500,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     ),
     "get_drafts": (
         "List all pending unsent message drafts across all chats in your Telegram account. "
-        "Read-only operation. To save a draft, use `save_draft`. To delete a draft, use `clear_draft`."
+        "Use when locating unfinished messages. To save a draft, use `save_draft`. To delete a draft, use `clear_draft`."
     ),
     "clear_draft": (
         "Clear and delete the saved message draft from a specified chat. "
@@ -499,7 +517,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     ),
     "download_media": (
         "Download an attachment or media file from a message to the local filesystem. "
-        "Destination path must resolve within configured MCP allowed roots. Read-only regarding Telegram servers."
+        "Destination path must resolve within configured MCP allowed roots. To check metadata before downloading, use `get_media_info`."
     ),
     "upload_file": (
         "Upload a local file into Telegram cloud storage without immediately posting to a chat. "
@@ -523,7 +541,7 @@ TOOL_DESCRIPTIONS: dict[str, str] = {
     ),
     "list_contact_aliases": (
         "List all configured private local contact aliases. "
-        "Read-only operation. To create an alias, use `set_contact_alias`. To remove one, use `delete_contact_alias`."
+        "Use when reviewing custom contact names. To create an alias, use `set_contact_alias`. To remove one, use `delete_contact_alias`."
     ),
     "delete_contact_alias": (
         "Delete a previously set local contact alias. "
