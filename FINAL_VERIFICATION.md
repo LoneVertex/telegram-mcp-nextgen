@@ -1,7 +1,7 @@
 # Final Verification Manifest
 
-**Target:** Telegram MCP next-generation checkout, version 4.1.1
-**Verification date:** 2026-09-11
+**Target:** Telegram MCP next-generation checkout, version 4.1.2
+**Verification date:** 2026-09-19
 **Execution environment:** Python 3.12 isolated environment at `/home/lonevertex/Projects/Active/telegram-mcp-nextgen/.venv`
 **Network/account policy:** No Telegram login, live RPC, send, delete, admin, contact, group, or media side effect was authorized or attempted.
 
@@ -11,8 +11,8 @@
 |---|---|---|
 | Adversarial suite | `pytest -q tests/test_adversarial_chaos.py` → 14 passed | **VERIFIED** |
 | Tool coverage suite | `pytest -q tests/test_all_tools_coverage.py` → 129 passed (128 tools + namespace parity) | **VERIFIED** |
-| Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 5 passed | **VERIFIED** |
-| Full suite | `pytest -q` → 511 passed, 2 known third-party warnings | **VERIFIED** |
+| Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 6 passed (all 35 core tools Tier A) | **VERIFIED** |
+| Full suite | `pytest -q` → 513 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
 | Focused coverage | next-generation core/database/config tests plus chaos tests → 46 passed; >95% threshold | **VERIFIED** |
 | Typed shared layers | `mypy --explicit-package-bases telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models` → no issues in 20 source files | **VERIFIED** |
 | Syntax gate | Ruff check over next-gen core/db/models/cache and test modules → no diagnostics | **VERIFIED** |
@@ -28,14 +28,14 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.1.1-py3-none-any.whl` | `0dac4bc3147fc6cdda89ddab8ee9002487a4e2512cd5e569fe4cfd9fc8fc0cb1` |
-| `telegram_mcp-4.1.1.tar.gz` | `8c0480c74cb42a121406fd30d65e24f12e0e2441370aaea10bdc40f2ec655723` |
+| `telegram_mcp-4.1.2-py3-none-any.whl` | `dbbd50ccb3bd119c9beeeb04c3bd2ae671e22bd9c04f6fa8ee75fae38d75a624` |
+| `telegram_mcp-4.1.2.tar.gz` | `ce05a0eb6806113c22fb373c7b583f074a57a1569a229315e90f7cf7bbe4ac21` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 
 ## Confirmed fixes
 
-The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added.
+The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added. In 4.1.2, TDQS behavioral transparency was resolved across all core tools (achieving 100% Tier A), test suite environment isolation was enforced, `python-json-logger` runtime deprecation was eliminated, and CI was modernized to Node 24 actions.
 
 ## Residual limitations
 

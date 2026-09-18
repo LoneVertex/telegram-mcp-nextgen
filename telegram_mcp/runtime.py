@@ -21,7 +21,10 @@ from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP, Context, Image
 from mcp.types import Annotations, ImageContent, TextContent, ToolAnnotations
 from mcp.shared.exceptions import McpError
-from pythonjsonlogger import jsonlogger
+try:
+    from pythonjsonlogger import json as jsonlogger
+except ImportError:
+    from pythonjsonlogger import jsonlogger
 from telethon import TelegramClient, functions, types, utils
 from telethon.errors import AuthKeyDuplicatedError
 from telethon.sessions import StringSession

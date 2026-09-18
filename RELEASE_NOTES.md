@@ -1,5 +1,16 @@
 # Release Notes
 
+## 4.1.2 — Tool Definition Quality Score (TDQS) certification, test isolation, and dependency modernization
+
+This patch release hardens MCP tool schema definitions, completes test suite isolation, and modernizes continuous integration:
+
+- **TDQS Tier A Certification:** Resolved parameter description behavioral transparency smell in `get_contact_chats` and removed redundant read-only echoes across 11 tools, elevating all 35 core tools to Glama TDQS Tier A.
+- **Automated TDQS Regression Suite:** Added `tests/test_glama_and_tdqs.py` ensuring zero regressions in parameter schemas, required field clarity, and absence of echo antipatterns.
+- **Test Environment Isolation:** Added autouse session fixture in `tests/conftest.py` guaranteeing multi-account `.env` variables cannot leak into unit test discovery.
+- **Runtime Deprecation Elimination:** Updated `python-json-logger` imports in `telegram_mcp.runtime` to support modern `pythonjsonlogger.json` namespace without deprecation warnings.
+- **CI Modernization:** Upgraded GitHub Actions workflow to Node 24 native action versions (`actions/checkout@v7`, `actions/setup-python@v7`, `actions/upload-artifact@v7`).
+- **Dependency Refresh:** Updated `uv.lock` with latest compatible upstream releases for Telethon, MCP Python SDK, Pydantic, and Cryptography.
+
 ## 4.1.1 — Glama registry manifest, TDQS schema enrichment, and container inspection
 
 This patch release adds full compatibility and quality verification for the Glama MCP registry:
