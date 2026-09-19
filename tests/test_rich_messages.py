@@ -117,3 +117,82 @@ async def test_edit_rich_both_premium_cases():
     result = json.loads(await messages._edit_rich(no, "peer", 7, "new", "rich"))
     assert result["reason"] == "telegram_premium_required"
     assert no.requests == []
+
+
+@pytest.mark.asyncio
+async def test_get_message_context_batches_replies(monkeypatch):
+    """Verify get_message_context batches replied message lookups into a single RPC."""
+    class _ContextClient:
+        def __init__(self):
+            self.id_calls = []
+
+        async def get_messages(self, entity, **kwargs):
+            if "ids" in kwargs:
+                ids = kwargs["ids"]
+                self.id_calls.append(ids)
+                if isinstance(ids, list):
+                    return [
+                        SimpleNamespace(
+                            id=i,
+                            date="2026-01-01",
+                            message=f"reply to {i}",
+                            sender=SimpleNamespace(first_name="User", last_name=str(i), title=None, username=None),
+                            sender_id=i,
+                            reply_to=None,
+                        )
+                        for i in ids
+                    ]
+                elif ids == 50:
+                    return SimpleNamespace(
+                        id=50,
+                        date="2026-01-01",
+                        message="central",
+                        sender=SimpleNamespace(first_name="Target", last_name="", title=None, username=None),
+                        sender_id=99,
+                        reply_to=None,
+                    )
+                return None
+
+            if kwargs.get("max_id") == 50:
+                return [
+                    SimpleNamespace(
+                        id=48,
+                        date="2026-01-01",
+                        message="msg 48",
+                        sender=SimpleNamespace(first_name="A", last_name="", title=None, username=None),
+                        sender_id=1,
+                        reply_to=SimpleNamespace(reply_to_msg_id=101),
+                    ),
+                    SimpleNamespace(
+                        id=49,
+                        date="2026-01-01",
+                        message="msg 49",
+                        sender=SimpleNamespace(first_name="B", last_name="", title=None, username=None),
+                        sender_id=2,
+                        reply_to=SimpleNamespace(reply_to_msg_id=102),
+                    ),
+                ]
+            return []
+
+    cl = _ContextClient()
+    monkeypatch.setattr(messages, "get_client", lambda account=None: cl)
+
+    async def fake_resolve(chat_id, client=None):
+        return "entity"
+
+    monkeypatch.setattr(messages, "resolve_entity", fake_resolve)
+
+    result = await messages.get_message_context(chat_id=123, message_id=50, context_size=5)
+    parsed = json.loads(result)
+    records = parsed["results"]
+    assert len(records) == 3
+    # Verify IDs was called with batch list [101, 102], not individual scalar calls
+    assert [101, 102] in cl.id_calls
+    assert 101 not in cl.id_calls
+    assert 102 not in cl.id_calls
+    # Verify replied messages are mapped correctly
+    msg48 = next(m for m in records if m["id"] == 48)
+    assert msg48["replied_message"]["text"] == "reply to 101"
+    msg49 = next(m for m in records if m["id"] == 49)
+    assert msg49["replied_message"]["text"] == "reply to 102"
+

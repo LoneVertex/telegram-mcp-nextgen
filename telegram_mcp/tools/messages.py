@@ -1039,6 +1039,27 @@ async def get_message_context(
         # Combine messages in chronological order
         all_messages = list(messages_before) + list(central_message) + list(messages_after)
         all_messages.sort(key=lambda m: m.id)
+
+        # Batch resolve replied messages in a single RPC to avoid N+1 queries
+        reply_ids = [
+            msg.reply_to.reply_to_msg_id
+            for msg in all_messages
+            if getattr(msg, "reply_to", None) and getattr(msg.reply_to, "reply_to_msg_id", None)
+        ]
+        replied_messages_map = {}
+        if reply_ids:
+            try:
+                unique_reply_ids = list(dict.fromkeys(reply_ids))
+                fetched_replies = await cl.get_messages(chat, ids=unique_reply_ids)
+                if fetched_replies:
+                    if not isinstance(fetched_replies, list):
+                        fetched_replies = [fetched_replies]
+                    for r_msg in fetched_replies:
+                        if r_msg and getattr(r_msg, "id", None):
+                            replied_messages_map[r_msg.id] = r_msg
+            except Exception:
+                replied_messages_map = {}
+
         records = []
         for msg in all_messages:
             sender_name = get_sender_name(msg)
@@ -1063,21 +1084,21 @@ async def get_message_context(
             if reply_quote:
                 record["reply_quote"] = reply_quote
             if msg.reply_to and msg.reply_to.reply_to_msg_id:
-                record["reply_to"] = msg.reply_to.reply_to_msg_id
-                try:
-                    replied_msg = await cl.get_messages(chat, ids=msg.reply_to.reply_to_msg_id)
-                    if replied_msg:
-                        replied_record = {
-                            "sender": get_sender_name(replied_msg),
-                            "text": sanitize_user_content(replied_msg.message),
-                        }
-                        if getattr(replied_msg, "sender_id", None):
-                            replied_record["sender_id"] = replied_msg.sender_id
-                        _r_username = get_sender_username(replied_msg)
-                        if _r_username:
-                            replied_record["username"] = _r_username
-                        record["replied_message"] = replied_record
-                except Exception:
+                reply_id = msg.reply_to.reply_to_msg_id
+                record["reply_to"] = reply_id
+                replied_msg = replied_messages_map.get(reply_id)
+                if replied_msg:
+                    replied_record = {
+                        "sender": get_sender_name(replied_msg),
+                        "text": sanitize_user_content(replied_msg.message),
+                    }
+                    if getattr(replied_msg, "sender_id", None):
+                        replied_record["sender_id"] = replied_msg.sender_id
+                    _r_username = get_sender_username(replied_msg)
+                    if _r_username:
+                        replied_record["username"] = _r_username
+                    record["replied_message"] = replied_record
+                else:
                     record["replied_message"] = None
 
             records.append(record)

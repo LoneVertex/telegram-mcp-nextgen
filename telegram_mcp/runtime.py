@@ -522,10 +522,24 @@ def is_multi_mode() -> bool:
 
 
 _DESTRUCTIVE_TOOL_NAMES = {
-    "delete_chat_history", "delete_messages_bulk", "delete_message", "delete_scheduled_message",
-    "delete_contact", "delete_contact_alias", "delete_folder", "delete_profile_photo",
-    "delete_chat_photo", "ban_user", "leave_chat", "unban_user", "demote_admin",
-    "remove_chat_from_folder", "unpin_all_messages", "clear_draft",
+    "ban_user",
+    "block_user",
+    "clear_draft",
+    "delete_chat_history",
+    "delete_chat_photo",
+    "delete_contact",
+    "delete_contact_alias",
+    "delete_folder",
+    "delete_message",
+    "delete_messages_bulk",
+    "delete_profile_photo",
+    "delete_scheduled_message",
+    "demote_admin",
+    "leave_chat",
+    "remove_chat_from_folder",
+    "remove_reaction",
+    "unpin_all_messages",
+    "unpin_message",
 }
 
 

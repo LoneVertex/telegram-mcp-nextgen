@@ -222,3 +222,18 @@ async def test_cache_health_alias_compatibility():
     assert "tier" in res1
     assert "database" in res1
     assert res1.keys() == res2.keys()
+
+
+def test_destructive_tool_names_matches_annotated_destructive_hints():
+    """Security gating in _DESTRUCTIVE_TOOL_NAMES must strictly match tools declaring destructiveHint=True."""
+    from telegram_mcp.runtime import _DESTRUCTIVE_TOOL_NAMES, mcp
+
+    annotated_destructive = {
+        tool.name
+        for tool in mcp._tool_manager.list_tools()
+        if getattr(getattr(tool, "annotations", None), "destructiveHint", False)
+    }
+    assert (
+        annotated_destructive == _DESTRUCTIVE_TOOL_NAMES
+    ), f"Mismatch between _DESTRUCTIVE_TOOL_NAMES and destructiveHint=True: diff={_DESTRUCTIVE_TOOL_NAMES ^ annotated_destructive}"
+
