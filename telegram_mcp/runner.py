@@ -214,9 +214,9 @@ def main() -> None:
         )
         return
     _configure_allowed_roots_from_cli(sys.argv[1:])
+    _runtime._apply_exposed_tools_mode()
     tier = os.getenv("TELEGRAM_MCP_TIER", "essential")
     apply_tool_tier(mcp, tier)
-    _runtime._apply_exposed_tools_mode()
     asyncio.run(_main())
 
 

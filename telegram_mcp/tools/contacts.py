@@ -231,14 +231,15 @@ async def get_contact_chats(contact_id: Union[int, str], account: Optional[str] 
             f"{getattr(contact, 'first_name', '')} {getattr(contact, 'last_name', '')}".strip()
         )
 
-        # Find direct chat
-        dialogs = await cl.get_dialogs()
+        # Find direct chat in recent dialogs (bounded to prevent unbounded network fetch)
+        dialogs = await cl.get_dialogs(limit=100)
 
         records = []
 
-        # Look for direct chat
+        # Look for direct chat with resolved user
+        target_user_id = getattr(contact, "id", contact_id)
         for dialog in dialogs:
-            if isinstance(dialog.entity, User) and dialog.entity.id == contact_id:
+            if isinstance(dialog.entity, User) and dialog.entity.id == target_user_id:
                 record = {"chat_id": get_marked_id(dialog.entity), "type": "Private"}
                 if dialog.unread_count:
                     record["unread"] = dialog.unread_count

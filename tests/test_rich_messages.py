@@ -196,3 +196,48 @@ async def test_get_message_context_batches_replies(monkeypatch):
     msg49 = next(m for m in records if m["id"] == 49)
     assert msg49["replied_message"]["text"] == "reply to 102"
 
+
+@pytest.mark.asyncio
+async def test_get_contact_chats_bounded_and_username_resolution(monkeypatch):
+    """Verify get_contact_chats uses bounded get_dialogs and matches resolved user ID."""
+    from telethon.tl.types import User
+
+    from telegram_mcp.tools import contacts
+
+    class _FakeContactClient:
+        def __init__(self):
+            self.dialog_limits = []
+
+        async def get_dialogs(self, limit=None):
+            self.dialog_limits.append(limit)
+            return [
+                SimpleNamespace(
+                    entity=User(id=999, first_name="Target", last_name="User"),
+                    unread_count=3,
+                )
+            ]
+
+        async def get_common_chats(self, user):
+            return [SimpleNamespace(id=1001, title="Common Group")]
+
+    cl = _FakeContactClient()
+    monkeypatch.setattr(contacts, "get_client", lambda account=None: cl)
+
+    resolved_user = User(id=999, first_name="Target", last_name="User")
+
+    async def fake_resolve(contact_id, client=None):
+        return resolved_user
+
+    monkeypatch.setattr(contacts, "resolve_entity", fake_resolve)
+
+    result = await contacts.get_contact_chats(contact_id="@target_user")
+    parsed = json.loads(result)
+    records = parsed["results"]
+    assert len(records) >= 1
+    # Verify get_dialogs was bounded (limit=100)
+    assert cl.dialog_limits == [100]
+    # Verify target user was correctly matched despite passing string username
+    private_chat = next(r for r in records if r.get("type") == "Private")
+    assert private_chat["unread"] == 3
+
+

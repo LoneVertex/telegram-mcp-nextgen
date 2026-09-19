@@ -1136,16 +1136,16 @@ class AliasStoreUnreadable(Exception):
 
 @contextmanager
 def _alias_lock(path: Path):
-    """Serialize read-modify-write cycles across processes (best effort)."""
-    if fcntl is None:  # pragma: no cover - Windows
-        yield
-        return
-    lock_fd = os.open(str(path) + ".lock", os.O_WRONLY | os.O_CREAT, 0o600)
+    """Serialize read-modify-write cycles across processes (cross-platform)."""
+    from filelock import FileLock
+
+    lock = FileLock(str(path) + ".lock", timeout=10)
     try:
-        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        lock.acquire()
         yield
     finally:
-        os.close(lock_fd)
+        if lock.is_locked:
+            lock.release()
 
 
 def update_aliases(mutate):
@@ -1603,6 +1603,8 @@ def _contains_forbidden_path_patterns(raw_path: str) -> Optional[str]:
     value = raw_path.strip()
     if not value:
         return "Path must not be empty."
+    if "\x00" in value:
+        return "Path contains forbidden NUL bytes."
     if any(token in value for token in DISALLOWED_PATH_PATTERNS):
         return "Path contains disallowed wildcard/shell patterns."
     if ".." in Path(value).parts:

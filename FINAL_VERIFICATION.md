@@ -13,7 +13,7 @@
 | Adversarial suite | `pytest -q tests/test_adversarial_chaos.py` → 14 passed | **VERIFIED** |
 | Tool coverage suite | `pytest -q tests/test_all_tools_coverage.py` → 130 passed (129 tools + namespace parity) | **VERIFIED** |
 | Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 7 passed (129 tools covered, 100% parameter schemas) | **VERIFIED** |
-| Full suite | `pytest -q` → 527 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
+| Full suite | `pytest -q` → 528 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
 | Focused coverage | next-generation core/database/config tests plus chaos tests → 46 passed; >95% threshold | **VERIFIED** |
 | Typed shared layers | `mypy --explicit-package-bases telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models` → no issues in 20 source files | **VERIFIED** |
 | Syntax gate | Ruff check over next-gen core/db/models/cache and test modules → no diagnostics | **VERIFIED** |
@@ -29,8 +29,8 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.2.0-py3-none-any.whl` | `e6392598d63741866fe9ffdc5833614ee93c12e29e9281a1d7eb262b337f9ab6` |
-| `telegram_mcp-4.2.0.tar.gz` | `b9baeb609ef52f92e45e113eea28f82bcb2a7e13ee406c4c1af823b3f8810409` |
+| `telegram_mcp-4.2.0-py3-none-any.whl` | `44a11f7ca6ff4c4a16c7a62c3de022a9295445b7d0db775d730b1847f76d2ede` |
+| `telegram_mcp-4.2.0.tar.gz` | `139a3a5aa59f69797b6228807473efa0f0e2371ca4fe52feae77c65533234e8e` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 
