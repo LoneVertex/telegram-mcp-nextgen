@@ -117,11 +117,11 @@ async def test_invalid_item_in_list():
 
 @pytest.mark.asyncio
 async def test_no_id_provided():
-    result, kwargs = await dummy_function()
+    result, _kwargs = await dummy_function()
     assert result == "success"
 
 
 @pytest.mark.asyncio
 async def test_none_id_provided():
-    result, kwargs = await dummy_function(user_id=None)
+    result, _kwargs = await dummy_function(user_id=None)
     assert result == "success"

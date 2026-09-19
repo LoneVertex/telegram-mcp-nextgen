@@ -22,9 +22,12 @@ from .security import (
     safe_filename,
     validate_mime,
 )
+from .tl_custom import CreateForumTopicRequest, GetForumTopicsRequest
 
 __all__ = [
     "AuthorizationError",
+    "CreateForumTopicRequest",
+    "GetForumTopicsRequest",
     "KeyedLockManager",
     "PathError",
     "PathSecurityError",
