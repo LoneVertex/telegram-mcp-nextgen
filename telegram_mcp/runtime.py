@@ -119,7 +119,11 @@ def get_entity_filter_type(entity: Any) -> Optional[str]:
     return None
 
 
-load_dotenv()
+_env_file = os.getenv("TELEGRAM_ENV_FILE")
+if _env_file and os.path.isfile(_env_file):
+    load_dotenv(_env_file)
+else:
+    load_dotenv()
 
 # Configuration validation is side-effect free; credentials are required only when
 # a live connection is started. This keeps local imports and cache tooling usable.

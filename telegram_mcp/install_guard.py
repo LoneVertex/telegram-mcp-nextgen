@@ -158,6 +158,10 @@ def _direct_url_is_explicit_source_install(direct_url: str) -> bool:
 
     if parsed_url.scheme == "file":
         source_path = Path(unquote(parsed_url.path)).resolve()
+        if source_path.is_file():
+            for parent in (source_path.parent, source_path.parent.parent):
+                if _project_root_declares_distribution_name(parent):
+                    return True
         return _project_root_declares_distribution_name(source_path)
 
     vcs_info = direct_url_data.get("vcs_info")

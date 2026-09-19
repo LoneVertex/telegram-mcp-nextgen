@@ -1,9 +1,9 @@
-from email.message import Message
 import importlib.util
-from importlib import metadata
 import json
-from pathlib import Path
 import sys
+from email.message import Message
+from importlib import metadata
+from pathlib import Path
 
 import pytest
 
@@ -64,6 +64,19 @@ def test_install_guard_accepts_file_install_from_project_root(tmp_path):
     )
     identity = _identity(direct_url=_direct_url(tmp_path.as_uri()))
 
+    assert install_guard._looks_like_explicit_source_install(identity) is True
+
+def test_install_guard_accepts_file_install_from_dist_artifact(tmp_path):
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "telegram-mcp"\n',
+        encoding="utf-8",
+    )
+    dist_dir = tmp_path / "dist"
+    dist_dir.mkdir()
+    wheel_file = dist_dir / "telegram_mcp-4.3.0-py3-none-any.whl"
+    wheel_file.write_bytes(b"")
+
+    identity = _identity(direct_url=_direct_url(wheel_file.as_uri()))
     assert install_guard._looks_like_explicit_source_install(identity) is True
 
 
