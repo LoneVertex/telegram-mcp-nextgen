@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "telegram-mcp"
-version = "4.2.0"
+version = "4.3.0"
 description = "Production-oriented Telegram integration for MCP clients"
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -25,6 +25,7 @@ classifiers = [
     "Typing :: Typed"
 ]
 dependencies = [
+    "filelock>=3.13,<5",
     "httpx>=0.28,<1",
     "mcp[cli]>=1.29,<2",
     "pillow>=11,<13",

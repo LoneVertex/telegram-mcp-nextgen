@@ -1,6 +1,6 @@
 # Final Verification Manifest
 
-**Target:** Telegram MCP next-generation checkout, version 4.2.0
+**Target:** Telegram MCP next-generation checkout, version 4.3.0
 **Verification date:** 2026-09-19
 **Execution environment:** Python 3.12 isolated environment at `/home/lonevertex/Projects/Active/telegram-mcp-nextgen/.venv`
 **Network/account policy:** No Telegram login, live RPC, send, delete, admin, contact, group, or media side effect was authorized or attempted.
@@ -29,8 +29,8 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.2.0-py3-none-any.whl` | `360fdc99e74e793f009803c64c72ae11d33877642ef8e5a961ed20791ac4caf8` |
-| `telegram_mcp-4.2.0.tar.gz` | `8b59bcd25b1d7c5cd71e2b348f30364839d2518f52326912dfcff2c528aca7eb` |
+| `telegram_mcp-4.3.0-py3-none-any.whl` | `676233c24923703cf8f6087eaab5d2da87655c2705acca17b1a26259f807adc0` |
+| `telegram_mcp-4.3.0.tar.gz` | `8b100fe3a179c209eab8fc7a6386203369a75a56ab6f300fc18790a3161fcff8` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 

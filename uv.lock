@@ -1741,9 +1741,10 @@ wheels = [
 
 [[package]]
 name = "telegram-mcp"
-version = "4.2.0"
+version = "4.3.0"
 source = { editable = "." }
 dependencies = [
+    { name = "filelock" },
     { name = "httpx" },
     { name = "mcp", extra = ["cli"] },
     { name = "pillow" },
@@ -1770,6 +1771,7 @@ proxy = [
 [package.metadata]
 requires-dist = [
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.2,<2" },
+    { name = "filelock", specifier = ">=3.13,<5" },
     { name = "httpx", specifier = ">=0.28,<1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.29,<2" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14,<2" },

@@ -1,5 +1,19 @@
 # Release Notes
 
+## 4.3.0 — Anti-Koshary Codebase Hardening, Architectural Decoupling, and Cross-Platform Reliability
+
+This minor release implements the full Anti-Koshary architectural hardening pass, eliminating security gating mismatches, N+1 RPC queries, and platform-specific concurrency locks while decoupling wire-format TLRequests and message presentation layers:
+
+- **Destructive Security Parity:** Synchronized `_DESTRUCTIVE_TOOL_NAMES` with all 18 tools declaring `destructiveHint=True`. Removed non-destructive `unban_user` and added bidirectional parity test in `tests/test_server_coherence.py`.
+- **N+1 RPC Elimination:** Batched reply message retrieval in `get_message_context` into a single MTProto vector query, eliminating latency bottlenecks during threaded inspection.
+- **Cross-Platform Synchronization:** Replaced Linux-only `fcntl.flock` with `filelock.FileLock` in alias state mutation (`telegram_mcp/runtime.py`), closing concurrency bypasses on Windows. Declared `filelock` as an explicit production dependency.
+- **Bounded Dialog Resolution:** Bound `get_contact_chats` dialog searches to 100 entries and resolved direct chats via immutable `contact.id` rather than fragile string username matching.
+- **Execution Mode Ordering:** Ensured `_apply_exposed_tools_mode` runs prior to `apply_tool_tier` in `runner.py`, preventing unexpected `SystemExit` on tier-pruned tools.
+- **Traversal Validation Hardening:** Hardened path boundary checks against NUL-byte injection attacks.
+- **Custom TLRequest Modularization:** Decoupled binary wire structures (`GetForumTopicsRequest`, `CreateForumTopicRequest`) from `chats.py` into dedicated `telegram_mcp.core.tl_custom` with 100% test coverage.
+- **Message Presentation Decoupling:** Promoted serialization and presentation helpers (`message_to_dict`, `format_message_line`, `get_reply_quote`, `get_media_label`) into `telegram_mcp.models.messages` with backward-compatible re-exports.
+- **Expanded Test Suite:** Increased test suite to 534 unit tests with 96.63% test coverage across core modules.
+
 ## 4.2.0 — Server Coherence, Essential Tier, and Complete TDQS Optimization
 
 This minor release elevates the Glama Server Coherence grade to Tier A, achieves complete TDQS compliance, eliminates all dangling cross-references, and introduces the `essential` tool tier:
