@@ -11,7 +11,7 @@ from dotenv import dotenv_values
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic import ValidationError as PydanticValidationError
 
-Tier = Literal["core", "standard", "full"]
+Tier = Literal["essential", "core", "standard", "full"]
 
 
 class ConfigurationError(ValueError):
@@ -33,7 +33,7 @@ class Settings(BaseModel):
     media_dir: Path | None = None
     exports_dir: Path | None = None
     db_path: Path | None = None
-    tier: Tier = "core"
+    tier: Tier = "essential"
     exposed_tools: str = "all"
     allow_server_roots_fallback: bool = False
     send_enabled: bool = False
@@ -66,8 +66,8 @@ class Settings(BaseModel):
     @field_validator("tier")
     @classmethod
     def validate_tier(cls, value: str) -> str:
-        if value not in {"core", "standard", "full"}:
-            raise ConfigurationError("tier must be one of: core, standard, full")
+        if value not in {"essential", "core", "standard", "full"}:
+            raise ConfigurationError("tier must be one of: essential, core, standard, full")
         return value
 
     @model_validator(mode="after")
@@ -142,7 +142,7 @@ class Settings(BaseModel):
             "session_string": get("TELEGRAM_SESSION_STRING"),
             "session_name": get("TELEGRAM_SESSION_NAME", "telegram"),
             "data_dir": get("TELEGRAM_DATA_DIR", str(Path.home() / ".local" / "state" / "telegram-mcp")),
-            "tier": get("TELEGRAM_MCP_TIER", "core"),
+            "tier": get("TELEGRAM_MCP_TIER", "essential"),
             "exposed_tools": get("TELEGRAM_EXPOSED_TOOLS", "all"),
             "allow_server_roots_fallback": boolean("TELEGRAM_ALLOW_SERVER_ROOTS_FALLBACK", False),
             "send_enabled": boolean("TELEGRAM_SEND_ENABLED", False),

@@ -6,19 +6,20 @@
 
 A production-oriented Telegram integration for MCP-compatible clients, maintained by LoneVertex and built on [Telethon](https://docs.telethon.dev/) and the [Model Context Protocol](https://modelcontextprotocol.io/). This repository preserves the upstream Telegram capability surface while adding explicit tool tiers, fail-closed mutation controls, keyed concurrency limits, bounded retries, local SQLite/FTS5 caching, safer media paths, package entrypoints, and reproducible CI.
 
-> **Default posture:** local stdio, `core` tool tier, no Telegram writes, no destructive operations, and no unverified filesystem roots.
+> **Default posture:** local stdio, `essential` tool tier, no Telegram writes, no destructive operations, and no unverified filesystem roots.
 
 Project governance: [Contributing](CONTRIBUTING.md) · [Security Policy](SECURITY.md) · [Apache License 2.0](LICENSE)
 
 ## What is included
 
-The implementation registers **128 tools**: the upstream 125 tools covering accounts, chats, contacts, messages, groups, media, profiles, folders, and incoming events, plus `cache_health`, `search_cached_messages`, and `sync_chat_cache`. The upstream provenance is preserved at commit `52cca204d945e4ec292801a9d972334c0c2a4b63`; the next-generation package is version `4.1.2`.
+The implementation registers **129 tools**: the upstream 125 tools covering accounts, chats, contacts, messages, groups, media, profiles, folders, and incoming events, plus `check_cache_health` (with backward-compatible `cache_health` alias), `search_cached_messages`, and `sync_chat_cache`. The upstream provenance is preserved at commit `52cca204d945e4ec292801a9d972334c0c2a4b63`; the next-generation package is version `4.2.0`.
 
-| Tier | Purpose | Default |
-|---|---|---|
-| `core` | Read-only account, chat, message, search, profile, media-inspection, contact, folder, admin-inspection, and local-cache tools | **Yes** |
-| `standard` | Core plus common message/media sends, replies, forwards, reactions, drafts, aliases, and event waits | No |
-| `full` | All upstream tools, including administrative and destructive operations | No |
+| Tier | Purpose | Default | Tool Count |
+|---|---|---|---|
+| `essential` | Highly coherent curated lifecycle suite (read, write, pin, media, cache) with zero dead-end references | **Yes** | 22 |
+| `core` | Extended read-only account, chat, message, search, profile, media, contact, folder, and local-cache tools | No | 36 |
+| `standard` | Core plus common message/media sends, replies, forwards, reactions, drafts, aliases, and event waits | No | 69 |
+| `full` | All 129 tools, including full administrative and destructive operations | No | 129 |
 
 Set `TELEGRAM_MCP_TIER` to select a tier. Tier selection controls which tools are registered. `TELEGRAM_SEND_ENABLED` independently controls whether write operations can execute, and `TELEGRAM_DESTRUCTIVE_ENABLED` is a second gate for destructive/admin actions. The server returns a structured `nothing_sent` or `nothing_done` response when a gate blocks a call.
 
@@ -55,7 +56,7 @@ The complete secret-free template is in `.env.example`. The important controls a
 
 | Variable | Safe default | Meaning |
 |---|---|---|
-| `TELEGRAM_MCP_TIER` | `core` | Registered tool tier: `core`, `standard`, or `full` |
+| `TELEGRAM_MCP_TIER` | `essential` | Registered tool tier: `essential`, `core`, `standard`, or `full` |
 | `TELEGRAM_SEND_ENABLED` | `false` | Global write-operation gate |
 | `TELEGRAM_DESTRUCTIVE_ENABLED` | `false` | Additional gate for delete, ban, leave, and similar operations |
 | `TELEGRAM_DATA_DIR` | `~/.local/state/telegram-mcp` | Persistent state root |
@@ -118,7 +119,7 @@ The root `main.py`, upstream tool module names, session generator, account label
 
 ## Troubleshooting
 
-If startup reports that no session is configured, generate an authorized session and set `TELEGRAM_SESSION_STRING` or a valid file-session name. If a write returns `MutationDisabled`, set `TELEGRAM_SEND_ENABLED=true` and restart; for deletion or administration, also set `TELEGRAM_DESTRUCTIVE_ENABLED=true`. If a file tool reports that roots are unavailable, configure client MCP Roots or pass a server-side allowed root as a positional argument. If a FloodWait exceeds the configured maximum, the call is intentionally returned rather than sleeping indefinitely. Use `cache_health` to inspect local SQLite/FTS5 integrity without contacting Telegram.
+If startup reports that no session is configured, generate an authorized session and set `TELEGRAM_SESSION_STRING` or a valid file-session name. If a write returns `MutationDisabled`, set `TELEGRAM_SEND_ENABLED=true` and restart; for deletion or administration, also set `TELEGRAM_DESTRUCTIVE_ENABLED=true`. If a file tool reports that roots are unavailable, configure client MCP Roots or pass a server-side allowed root as a positional argument. If a FloodWait exceeds the configured maximum, the call is intentionally returned rather than sleeping indefinitely. Use `check_cache_health` (or `cache_health`) to inspect local SQLite/FTS5 integrity without contacting Telegram.
 
 ## References
 

@@ -210,11 +210,11 @@ def main() -> None:
             "Environment: TELEGRAM_API_ID, TELEGRAM_API_HASH, "
             "TELEGRAM_SESSION_STRING, TELEGRAM_MCP_TIER, "
             "TELEGRAM_SEND_ENABLED, TELEGRAM_DESTRUCTIVE_ENABLED.\n"
-            "Default tier: core; default transport: stdio."
+            "Default tier: essential; default transport: stdio."
         )
         return
     _configure_allowed_roots_from_cli(sys.argv[1:])
-    tier = os.getenv("TELEGRAM_MCP_TIER", "core")
+    tier = os.getenv("TELEGRAM_MCP_TIER", "essential")
     apply_tool_tier(mcp, tier)
     _runtime._apply_exposed_tools_mode()
     asyncio.run(_main())

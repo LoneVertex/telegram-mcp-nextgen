@@ -64,7 +64,24 @@ def _message_row(chat_id: int, message: Any) -> dict[str, Any]:
 
 @mcp.tool(
     annotations=ToolAnnotations(
-        title="Cache Health",
+        title="Check Cache Health",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    )
+)
+async def check_cache_health() -> dict[str, Any]:
+    """Return local SQLite/FTS5 integrity and active tier diagnostics."""
+    await _repo_async()
+    assert _database is not None
+    integrity = await asyncio.to_thread(_database.integrity_check)
+    return {"status": "ok", "database": integrity, "tier": settings.tier}
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Check Cache Health (Legacy Alias)",
         readOnlyHint=True,
         destructiveHint=False,
         idempotentHint=True,
@@ -72,11 +89,8 @@ def _message_row(chat_id: int, message: Any) -> dict[str, Any]:
     )
 )
 async def cache_health() -> dict[str, Any]:
-    """Return local SQLite/FTS5 integrity and active tier diagnostics."""
-    await _repo_async()
-    assert _database is not None
-    integrity = await asyncio.to_thread(_database.integrity_check)
-    return {"status": "ok", "database": integrity, "tier": settings.tier}
+    """Legacy alias for check_cache_health."""
+    return await check_cache_health()
 
 
 @mcp.tool(

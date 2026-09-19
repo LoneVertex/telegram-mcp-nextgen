@@ -15,6 +15,7 @@ from telegram_mcp.tools import (
     block_user,
     # cache (3)
     cache_health,
+    check_cache_health,
     clear_draft,
     create_channel,
     create_folder,
@@ -153,6 +154,7 @@ ALL_TOOL_FUNCTIONS = [
     list_accounts,
     # cache
     cache_health,
+    check_cache_health,
     search_cached_messages,
     sync_chat_cache,
     # chats
@@ -290,11 +292,11 @@ ALL_TOOL_FUNCTIONS = [
 ]
 
 
-def test_tool_count_is_exactly_128():
-    """Verify that exactly 128 tools are registered in total."""
-    assert len(ALL_TOOL_FUNCTIONS) == 128
+def test_tool_count_is_exactly_129():
+    """Verify that exactly 129 tools are registered in total."""
+    assert len(ALL_TOOL_FUNCTIONS) == 129
     registered_tools = main.mcp._tool_manager._tools
-    assert len(registered_tools) == 128
+    assert len(registered_tools) == 129
 
 
 @pytest.mark.parametrize("fn", ALL_TOOL_FUNCTIONS, ids=lambda f: f.__name__)

@@ -1,5 +1,15 @@
 # Release Notes
 
+## 4.2.0 — Server Coherence, Essential Tier, and Complete TDQS Optimization
+
+This minor release elevates the Glama Server Coherence grade to Tier A, achieves complete TDQS compliance, eliminates all dangling cross-references, and introduces the `essential` tool tier:
+
+- **Curated `essential` Tier (22 tools):** Introduced a balanced default tier with exactly 22 tools (<=25 penalty threshold), providing full conversational and media lifecycle (read, send, reply, edit, delete, pin, unpin, mark-as-read, file transfer, contact discovery, and offline cache) while preserving fail-closed safety (`TELEGRAM_SEND_ENABLED=false`).
+- **100% Naming Consistency (`verb_noun`):** Renamed `cache_health` to `check_cache_health` to ensure 100% imperative verb adherence across tools, while preserving `cache_health` as a backward-compatible alias.
+- **Eliminated Dead-End Tool References:** Cleaned up dangling cross-references in `TOOL_DESCRIPTIONS` pointing to non-existent tools (`set_privacy_settings`, `set_bot_commands`, `unpin_all_messages`, `get_gif_search`) and cross-tier unexposed tools, achieving zero broken references in every tier.
+- **Automated Coherence Test Suite:** Added `tests/test_server_coherence.py` enforcing tool count limits, verb-noun naming uniformity, tier lifecycle completeness, and zero dangling tool references across all tiers.
+- **Comprehensive Tool Parity:** Increased registered tool count to 129 tools with 100% parameter annotations and 525 passing unit tests.
+
 ## 4.1.2 — Tool Definition Quality Score (TDQS) certification, test isolation, and dependency modernization
 
 This patch release hardens MCP tool schema definitions, completes test suite isolation, and modernizes continuous integration:

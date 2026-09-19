@@ -1,6 +1,6 @@
 # Final Verification Manifest
 
-**Target:** Telegram MCP next-generation checkout, version 4.1.2
+**Target:** Telegram MCP next-generation checkout, version 4.2.0
 **Verification date:** 2026-09-19
 **Execution environment:** Python 3.12 isolated environment at `/home/lonevertex/Projects/Active/telegram-mcp-nextgen/.venv`
 **Network/account policy:** No Telegram login, live RPC, send, delete, admin, contact, group, or media side effect was authorized or attempted.
@@ -9,10 +9,11 @@
 
 | Gate | Command/result | Status |
 |---|---|---|
+| Server Coherence suite | `pytest -q tests/test_server_coherence.py` → 11 passed (verb_noun, zero dead-ends, count <=25) | **VERIFIED** |
 | Adversarial suite | `pytest -q tests/test_adversarial_chaos.py` → 14 passed | **VERIFIED** |
-| Tool coverage suite | `pytest -q tests/test_all_tools_coverage.py` → 129 passed (128 tools + namespace parity) | **VERIFIED** |
-| Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 6 passed (all 35 core tools Tier A) | **VERIFIED** |
-| Full suite | `pytest -q` → 513 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
+| Tool coverage suite | `pytest -q tests/test_all_tools_coverage.py` → 130 passed (129 tools + namespace parity) | **VERIFIED** |
+| Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 7 passed (129 tools covered, 100% parameter schemas) | **VERIFIED** |
+| Full suite | `pytest -q` → 525 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
 | Focused coverage | next-generation core/database/config tests plus chaos tests → 46 passed; >95% threshold | **VERIFIED** |
 | Typed shared layers | `mypy --explicit-package-bases telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models` → no issues in 20 source files | **VERIFIED** |
 | Syntax gate | Ruff check over next-gen core/db/models/cache and test modules → no diagnostics | **VERIFIED** |
@@ -28,14 +29,14 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.1.2-py3-none-any.whl` | `dbbd50ccb3bd119c9beeeb04c3bd2ae671e22bd9c04f6fa8ee75fae38d75a624` |
-| `telegram_mcp-4.1.2.tar.gz` | `ce05a0eb6806113c22fb373c7b583f074a57a1569a229315e90f7cf7bbe4ac21` |
+| `telegram_mcp-4.2.0-py3-none-any.whl` | `cccc364dd54390f1259e593d17f78cdcfa20ad5eab3a2a38086cbbab2faa3563` |
+| `telegram_mcp-4.2.0.tar.gz` | `7a366e793b8205f2a08c0d5418d9c7cbc8d506b1fd026f8d8aba06538778fe35` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 
 ## Confirmed fixes
 
-The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added. In 4.1.2, TDQS behavioral transparency was resolved across all core tools (achieving 100% Tier A), test suite environment isolation was enforced, `python-json-logger` runtime deprecation was eliminated, and CI was modernized to Node 24 actions.
+The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added. In 4.1.2, TDQS behavioral transparency was resolved across all core tools (achieving 100% Tier A), test suite environment isolation was enforced, `python-json-logger` runtime deprecation was eliminated, and CI was modernized to Node 24 actions. In 4.2.0, Server Coherence was elevated to Tier A by introducing the 22-tool `essential` default tier (resolving tool count penalty and write omissions with fail-closed gates), standardizing naming consistency with `check_cache_health`, eliminating dead-end cross-references across all tiers, and writing automated coherence enforcement tests.
 
 ## Residual limitations
 

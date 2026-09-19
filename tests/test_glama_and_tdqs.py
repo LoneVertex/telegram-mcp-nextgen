@@ -34,10 +34,10 @@ def test_readme_contains_glama_badges():
 @pytest.mark.asyncio
 async def test_schema_enricher_achieves_100_percent_coverage():
     count = enrich_all_tools(mcp)
-    assert count == 128
+    assert count == 129
 
     tools = await mcp.list_tools()
-    assert len(tools) == 128
+    assert len(tools) == 129
 
     missing_desc = []
     short_titles = []

@@ -14,7 +14,7 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONHASHSEED=random \
-    TELEGRAM_MCP_TIER=core \
+    TELEGRAM_MCP_TIER=essential \
     TELEGRAM_SEND_ENABLED=false \
     TELEGRAM_DESTRUCTIVE_ENABLED=false \
     TELEGRAM_DATA_DIR=/var/lib/telegram-mcp \

@@ -13,7 +13,34 @@ CORE_TOOL_NAMES = frozenset(
         "list_contacts", "search_contacts", "get_contact_ids", "get_contact_chats",
         "get_last_interaction", "get_privacy_settings", "get_user_status", "get_bot_info",
         "list_folders", "get_folder", "get_admins", "get_banned_users", "get_recent_actions",
-        "cache_health", "search_cached_messages", "sync_chat_cache",
+        "check_cache_health", "cache_health", "search_cached_messages", "sync_chat_cache",
+    }
+)
+
+ESSENTIAL_TOOL_NAMES = frozenset(
+    {
+        "get_me",
+        "list_chats",
+        "get_chat",
+        "search_public_chats",
+        "resolve_username",
+        "get_messages",
+        "search_messages",
+        "send_message",
+        "reply_to_message",
+        "edit_message",
+        "delete_message",
+        "pin_message",
+        "unpin_message",
+        "mark_as_read",
+        "send_file",
+        "download_media",
+        "get_media_info",
+        "list_contacts",
+        "search_contacts",
+        "check_cache_health",
+        "search_cached_messages",
+        "sync_chat_cache",
     }
 )
 
@@ -29,16 +56,18 @@ STANDARD_ADDITIONS = frozenset(
     }
 )
 
-VALID_TIERS = frozenset({"core", "standard", "full"})
+VALID_TIERS = frozenset({"essential", "core", "standard", "full"})
 
 
 def allowed_tool_names(tier: str) -> frozenset[str] | None:
     """Return the allowlist, or ``None`` for full upstream compatibility."""
     normalized = tier.strip().lower()
     if normalized not in VALID_TIERS:
-        raise ValueError("TELEGRAM_MCP_TIER must be one of: core, standard, full")
+        raise ValueError("TELEGRAM_MCP_TIER must be one of: essential, core, standard, full")
     if normalized == "full":
         return None
+    if normalized == "essential":
+        return ESSENTIAL_TOOL_NAMES
     if normalized == "standard":
         return CORE_TOOL_NAMES | STANDARD_ADDITIONS
     return CORE_TOOL_NAMES
