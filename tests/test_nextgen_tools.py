@@ -16,10 +16,13 @@ from telegram_mcp.tools import cache
 
 
 def test_tiers_are_monotonic_and_full_is_compatibility_mode() -> None:
+    essential = allowed_tool_names("essential")
     core = allowed_tool_names("core")
     standard = allowed_tool_names("standard")
+    assert essential is not None
     assert core is not None
     assert standard is not None
+    assert len(essential) == 22
     assert CORE_TOOL_NAMES <= core <= standard
     assert allowed_tool_names("full") is None
     with pytest.raises(ValueError):

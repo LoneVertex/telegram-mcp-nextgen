@@ -1,4 +1,4 @@
-"""Comprehensive verification that all 128 MCP tools are registered, tested, and declare complete annotations."""
+"""Comprehensive verification that all 129 MCP tools are registered, tested, and declare complete annotations."""
 
 from __future__ import annotations
 

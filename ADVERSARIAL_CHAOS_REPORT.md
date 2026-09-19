@@ -49,10 +49,9 @@ Final package hashes:
 **Reproducible Chaos Test Case:** The complete regression is in `tests/test_adversarial_chaos.py::test_mutation_is_not_retried_after_uncertain_network_failure`. Its essential runnable command is:
 
 ```bash
-cd /home/ubuntu/work/telegram-mcp-nextgen/nextgen
 PYTHONPATH=. TELEGRAM_API_ID=12345 TELEGRAM_API_HASH=dummy_hash \
 TELEGRAM_SESSION_NAME=test_session TELEGRAM_SEND_ENABLED=true \
-/home/ubuntu/work/telegram-mcp-nextgen/.venv-upstream/bin/python -m pytest -q \
+python -m pytest -q \
 tests/test_adversarial_chaos.py::test_mutation_is_not_retried_after_uncertain_network_failure
 ```
 
@@ -73,10 +72,9 @@ The test decorates a coroutine with `with_account(readonly=False)`, raises `Conn
 **Reproducible Chaos Test Case:** The complete regression is in `tests/test_adversarial_chaos.py::test_sync_checkpoint_survives_cancellation_and_resumes_from_last_batch`. Run it with:
 
 ```bash
-cd /home/ubuntu/work/telegram-mcp-nextgen/nextgen
 PYTHONPATH=. TELEGRAM_API_ID=12345 TELEGRAM_API_HASH=dummy_hash \
 TELEGRAM_SESSION_NAME=test_session TELEGRAM_SEND_ENABLED=true \
-/home/ubuntu/work/telegram-mcp-nextgen/.venv-upstream/bin/python -m pytest -q \
+python -m pytest -q \
 tests/test_adversarial_chaos.py::test_sync_checkpoint_survives_cancellation_and_resumes_from_last_batch
 ```
 
@@ -97,10 +95,9 @@ The test interrupts at message 56 and asserts that 50 rows and checkpoint 50 sur
 **Reproducible Chaos Test Case:** The complete regression is in `tests/test_adversarial_chaos.py::test_concurrent_cache_reads_and_writes_are_consistent`. Run it with:
 
 ```bash
-cd /home/ubuntu/work/telegram-mcp-nextgen/nextgen
 PYTHONPATH=. TELEGRAM_API_ID=12345 TELEGRAM_API_HASH=dummy_hash \
 TELEGRAM_SESSION_NAME=test_session \
-/home/ubuntu/work/telegram-mcp-nextgen/.venv-upstream/bin/python -m pytest -q \
+python -m pytest -q \
 tests/test_adversarial_chaos.py::test_concurrent_cache_reads_and_writes_are_consistent
 ```
 
@@ -121,10 +118,9 @@ The pre-fix run failed with `sqlite3.OperationalError: database is locked` durin
 **Reproducible Chaos Test Case:** The complete regression is in `tests/test_adversarial_chaos.py::test_fts_adversarial_queries_never_escape_or_crash`. Run it with:
 
 ```bash
-cd /home/ubuntu/work/telegram-mcp-nextgen/nextgen
 PYTHONPATH=. TELEGRAM_API_ID=12345 TELEGRAM_API_HASH=dummy_hash \
 TELEGRAM_SESSION_NAME=test_session \
-/home/ubuntu/work/telegram-mcp-nextgen/.venv-upstream/bin/python -m pytest -q \
+python -m pytest -q \
 tests/test_adversarial_chaos.py::test_fts_adversarial_queries_never_escape_or_crash
 ```
 
@@ -145,10 +141,9 @@ The pre-fix case failed for `query="\x00"` with `sqlite3.OperationalError: unter
 **Reproducible Chaos Test Case:** The complete regression is in `tests/test_adversarial_chaos.py::test_open_photo_uses_atomic_save_primitive`, with primitive cleanup and size-failure behavior covered by `test_atomic_stream_is_bounded_and_cleans_temp_file`. Run it with:
 
 ```bash
-cd /home/ubuntu/work/telegram-mcp-nextgen/nextgen
 PYTHONPATH=. TELEGRAM_API_ID=12345 TELEGRAM_API_HASH=dummy_hash \
 TELEGRAM_SESSION_NAME=test_session \
-/home/ubuntu/work/telegram-mcp-nextgen/.venv-upstream/bin/python -m pytest -q \
+python -m pytest -q \
 tests/test_adversarial_chaos.py::test_open_photo_uses_atomic_save_primitive
 ```
 

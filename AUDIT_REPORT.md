@@ -8,14 +8,14 @@
 
 The upstream repository is active, Apache-2.0 licensed, and functionally broad: the audited revision registers 125 MCP tools across accounts, chats, contacts, events, folders, groups, media, messages, and profile modules. Its inherited 335-test suite passed offline with 92.68% configured coverage, but capability breadth was concentrated in a 1,823-line runtime with import-time environment/client discovery, distributed retries, incomplete uniform mutation gating, synchronous media writes in async paths, and CI checks that did not cover the new infrastructure. The upgrade preserves upstream modules and compatibility paths while adding a typed configuration layer, `core`/`standard`/`full` tool tiers, fail-closed write gates, keyed account serialization, token-bucket rate limiting, centralized bounded retry policy, SQLite WAL/FTS5 cache storage, resumable cache synchronization, safer media bounds, package entrypoints, Docker/Compose hardening, and a consolidated least-privilege CI workflow.
 
-The resulting working copy registers 128 tools, passes the inherited suite plus the adversarial chaos suite, and passes the focused 95% coverage gate for the new configuration/core/database/model layers. The adversarial pass confirmed and patched unsafe mutation replay, whole-sync checkpoint loss, FTS5 syntax failure on hostile input, and same-process SQLite lock contention. Package building and the offline CLI help path are verified; live Telegram authentication, live mutation behavior, and Docker image execution remain intentionally unverified in the sandbox.
+The resulting working copy registers 129 tools, passes the inherited suite plus the adversarial chaos suite, and passes the focused 95% coverage gate for the new configuration/core/database/model layers. The adversarial pass confirmed and patched unsafe mutation replay, whole-sync checkpoint loss, FTS5 syntax failure on hostile input, and same-process SQLite lock contention. Package building and the offline CLI help path are verified; live Telegram authentication, live mutation behavior, and Docker image execution remain intentionally unverified in the sandbox.
 
 ## Baseline evidence
 
 | Check | Result | Evidence |
 |---|---|---|
 | Upstream revision | **VERIFIED** | `52cca204d945e4ec292801a9d972334c0c2a4b63` on `main` |
-| Upstream tool decorators | **VERIFIED** | 125 upstream registrations; 128 after three local cache tools |
+| Upstream tool decorators | **VERIFIED** | 125 upstream registrations; 129 after local cache tools (including check_cache_health) |
 | Upstream tests | **VERIFIED** | 335 passed offline before changes |
 | Upstream configured coverage | **VERIFIED** | 92.68% for `runtime`, `main`, and `sanitize` |
 | Upstream Black / critical Flake8 | **VERIFIED** | Passed in the isolated baseline environment |
@@ -53,9 +53,10 @@ The local archive is deliberately bounded. `sync_chat_cache` stores an explicit 
 | Surface | Count | Exposure |
 |---|---:|---|
 | Upstream capability tools | 125 | `full` tier; filtered by default |
-| Local cache tools | 3 | `core` tier |
-| Total registered in full mode | **128** | Compatibility surface |
-| Core tier observed | **35** | Read/search/cache/admin-inspection subset |
+| Local cache tools | 4 | `essential` / `core` tiers (`check_cache_health`, `cache_health`, `search_cached_messages`, `sync_chat_cache`) |
+| Total registered in full mode | **129** | Compatibility surface |
+| Essential tier observed | **22** | High-coherence conversational lifecycle subset |
+| Core tier observed | **36** | Extended read/search/cache/admin-inspection subset |
 
 ## Verification evidence
 
@@ -68,7 +69,7 @@ The local archive is deliberately bounded. `sync_chat_cache` stores an explicit 
 | Ruff syntax gate | **VERIFIED** | No E9 syntax diagnostics in changed production/test files; full historical Ruff run still reports inherited debt |
 | Focused mypy | **VERIFIED** | No issues in `telegram_mcp/core` and `telegram_mcp/db`; MCP decorator surface remains SDK-untyped |
 | Python compilation | **VERIFIED** | `compileall` passed |
-| Wheel and sdist build | **VERIFIED** | `telegram_mcp-4.0.0-py3-none-any.whl` and `.tar.gz` built |
+| Wheel and sdist build | **VERIFIED** | Valid wheel and sdist built cleanly (version progression from v4.0.0 to v4.2.0) |
 | Offline CLI help | **VERIFIED** | Source-tree `python -m telegram_mcp --help` exits without network/client startup |
 | Dependency audit | **VERIFIED** | `pip-audit` found no known vulnerabilities; local project is not published on PyPI and was skipped |
 | Docker build | **BLOCKED** | Docker is unavailable in the sandbox; CI contains the build gate |

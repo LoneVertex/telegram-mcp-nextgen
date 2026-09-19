@@ -1,7 +1,7 @@
 # Telegram MCP Sanitization Report
 
 **Maintainer standard:** LoneVertex
-**Target:** `/home/ubuntu/work/telegram-mcp-nextgen/nextgen`
+**Target:** `telegram-mcp-nextgen` checkout
 **Date:** 2026-08-24
 **Scope:** Non-functional metadata, documentation, attribution, sample-data, and generated-residue cleanup after the adversarial hardening pass.
 
@@ -24,7 +24,7 @@ The scan covered the complete working tree outside `.git`, including Python sour
 | Git history and upstream provenance | **PRESERVED** — no history, commit trailer, branch, tag, URL, or upstream attribution was rewritten |
 | Third-party license text | **PRESERVED** — Apache-2.0 body remains intact |
 
-The exact pre-cleanup marker and artifact inventory was recorded in `/home/ubuntu/work/telegram-mcp-nextgen/sanitization-ledger-before.md` outside the repository.
+The pre-cleanup marker and artifact inventory was recorded in the external audit sanitization ledger.
 
 ## Files modified and exact changes
 
