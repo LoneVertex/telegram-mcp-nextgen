@@ -2,7 +2,7 @@
 
 from typing import Any
 
-__version__ = "4.3.0"
+__version__ = "4.3.1"
 
 
 def __getattr__(name: str) -> Any:

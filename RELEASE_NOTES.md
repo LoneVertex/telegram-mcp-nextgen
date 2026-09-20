@@ -1,5 +1,14 @@
 # Release Notes
 
+## 4.3.1 — Install Guard Artifact Provenance & Runtime Environment Fix
+
+This patch release fixes local wheel distribution verification and guarantees runtime environment discovery:
+
+- **Local Distribution Artifact Provenance:** Extended `install_guard._direct_url_is_explicit_source_install` to recognize `.whl` and `.tar.gz` packages built and installed from the local `dist/` directory, resolving false-positive `UnsafeInstallationError` during tool installations.
+- **Environment Discovery Parity:** Configured `telegram_mcp.runtime` to explicitly load environment variables from `TELEGRAM_ENV_FILE` if present.
+- **Continuous Integration Lint Coverage:** Expanded CI quality gate in `.github/workflows/ci.yml` to strictly lint `tests/test_install_guard.py`.
+- **Regression Test Suite:** Added `test_install_guard_accepts_file_install_from_dist_artifact` in `tests/test_install_guard.py`, expanding the test suite to 535 unit tests.
+
 ## 4.3.0 — Anti-Koshary Codebase Hardening, Architectural Decoupling, and Cross-Platform Reliability
 
 This minor release implements the full Anti-Koshary architectural hardening pass, eliminating security gating mismatches, N+1 RPC queries, and platform-specific concurrency locks while decoupling wire-format TLRequests and message presentation layers:

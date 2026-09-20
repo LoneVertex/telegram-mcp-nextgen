@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "telegram-mcp"
-version = "4.3.0"
-description = "Production-oriented Telegram integration for MCP clients"
+version = "4.3.1"
+description = "Production-oriented Telegram integration via the Model Context Protocol"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [

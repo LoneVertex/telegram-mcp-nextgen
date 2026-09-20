@@ -69,7 +69,7 @@ The local archive is deliberately bounded. `sync_chat_cache` stores an explicit 
 | Ruff syntax gate | **VERIFIED** | No E9 syntax diagnostics in changed production/test files; full historical Ruff run still reports inherited debt |
 | Focused mypy | **VERIFIED** | No issues in `telegram_mcp/core` and `telegram_mcp/db`; MCP decorator surface remains SDK-untyped |
 | Python compilation | **VERIFIED** | `compileall` passed |
-| Wheel and sdist build | **VERIFIED** | Valid wheel and sdist built cleanly (version progression from v4.0.0 to v4.3.0) |
+| Wheel and sdist build | **VERIFIED** | Valid wheel and sdist built cleanly (version progression from v4.0.0 to v4.3.1) |
 | Offline CLI help | **VERIFIED** | Source-tree `python -m telegram_mcp --help` exits without network/client startup |
 | Dependency audit | **VERIFIED** | `pip-audit` found no known vulnerabilities; local project is not published on PyPI and was skipped |
 | Docker build | **BLOCKED** | Docker is unavailable in the sandbox; CI contains the build gate |

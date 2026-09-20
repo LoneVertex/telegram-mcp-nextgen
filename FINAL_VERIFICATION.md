@@ -1,7 +1,7 @@
 # Final Verification Manifest
 
-**Target:** Telegram MCP next-generation checkout, version 4.3.0
-**Verification date:** 2026-09-19
+**Target:** Telegram MCP next-generation checkout, version 4.3.1
+**Verification date:** 2026-09-20
 **Execution environment:** Python 3.12 isolated environment at `/home/lonevertex/Projects/Active/telegram-mcp-nextgen/.venv`
 **Network/account policy:** No Telegram login, live RPC, send, delete, admin, contact, group, or media side effect was authorized or attempted.
 
@@ -13,7 +13,7 @@
 | Adversarial suite | `pytest -q tests/test_adversarial_chaos.py` → 14 passed | **VERIFIED** |
 | Tool coverage suite | `pytest -q tests/test_all_tools_coverage.py` → 130 passed (129 tools + namespace parity) | **VERIFIED** |
 | Glama & TDQS suite | `pytest -q tests/test_glama_and_tdqs.py` → 7 passed (129 tools covered, 100% parameter schemas) | **VERIFIED** |
-| Full suite | `pytest -q` → 534 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
+| Full suite | `pytest -q` → 535 passed, 0 errors, 0 deprecation warnings | **VERIFIED** |
 | Focused coverage | next-generation core/database/config tests plus chaos tests → 51 passed; >95% threshold (96.63% achieved) | **VERIFIED** |
 | Typed shared layers | `mypy --explicit-package-bases telegram_mcp/config.py telegram_mcp/core telegram_mcp/db telegram_mcp/models` → no issues in 21 source files | **VERIFIED** |
 | Syntax gate | Ruff check over next-gen core/db/models/cache and test modules → no diagnostics | **VERIFIED** |
@@ -29,14 +29,14 @@
 
 | Artifact | SHA-256 |
 |---|---|
-| `telegram_mcp-4.3.0-py3-none-any.whl` | `676233c24923703cf8f6087eaab5d2da87655c2705acca17b1a26259f807adc0` |
-| `telegram_mcp-4.3.0.tar.gz` | `8b100fe3a179c209eab8fc7a6386203369a75a56ab6f300fc18790a3161fcff8` |
+| `telegram_mcp-4.3.1-py3-none-any.whl` | `4f158275dcbf69fcb6f8a61482e2e0974dd4989f9cf8ca3133b488f8178e10fa` |
+| `telegram_mcp-4.3.1.tar.gz` | `8bb251ad4e718da8dbd6eaf4c311719b5cc9f19d2fc91d9674fa83165e7ccd5a` |
 
 The source archive contains the patched source, tests, packaging, CI, documentation, and the complete adversarial regression module. Generated caches, session artifacts, build directories, local logs, and coverage databases are excluded from the clean archive.
 
 ## Confirmed fixes
 
-The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added. In 4.1.2, TDQS behavioral transparency was resolved across all core tools (achieving 100% Tier A), test suite environment isolation was enforced, `python-json-logger` runtime deprecation was eliminated, and CI was modernized to Node 24 actions. In 4.2.0, Server Coherence was elevated to Tier A by introducing the 22-tool `essential` default tier (resolving tool count penalty and write omissions with fail-closed gates), standardizing naming consistency with `check_cache_health`, eliminating dead-end cross-references across all tiers, and writing automated coherence enforcement tests. In the Anti-Koshary architectural hardening pass, security gating was synchronized across all 18 destructive tools with bidirectional coherence assertion, N+1 RPC queries in `get_message_context` were eliminated via batched MTProto vector fetching, cross-platform locking in `runtime.py` was made robust across Windows/Linux via `filelock`, `get_contact_chats` dialog iteration was bounded, path validation was hardened against NUL-byte injection, custom binary TLRequests (`GetForumTopicsRequest`, `CreateForumTopicRequest`) were decoupled into `telegram_mcp.core.tl_custom`, message presentation/serialization helpers were modularized into `telegram_mcp.models.messages`, and test unpacked arguments were sanitized.
+The adversarial pass found and patched unsafe whole-operation mutation retries, non-resumable whole-stream cache synchronization, same-process SQLite lock contention, FTS5 crashes from hostile query bytes, and non-atomic retained-photo writes. In 4.1.0, complete tool hints (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) across all 128 tools, full 100% test coverage for tool registration and hint completeness, and session lock teardown cleanup fixtures were added. In 4.1.2, TDQS behavioral transparency was resolved across all core tools (achieving 100% Tier A), test suite environment isolation was enforced, `python-json-logger` runtime deprecation was eliminated, and CI was modernized to Node 24 actions. In 4.2.0, Server Coherence was elevated to Tier A by introducing the 22-tool `essential` default tier (resolving tool count penalty and write omissions with fail-closed gates), standardizing naming consistency with `check_cache_health`, eliminating dead-end cross-references across all tiers, and writing automated coherence enforcement tests. In the Anti-Koshary architectural hardening pass, security gating was synchronized across all 18 destructive tools with bidirectional coherence assertion, N+1 RPC queries in `get_message_context` were eliminated via batched MTProto vector fetching, cross-platform locking in `runtime.py` was made robust across Windows/Linux via `filelock`, `get_contact_chats` dialog iteration was bounded, path validation was hardened against NUL-byte injection, custom binary TLRequests (`GetForumTopicsRequest`, `CreateForumTopicRequest`) were decoupled into `telegram_mcp.core.tl_custom`, message presentation/serialization helpers were modularized into `telegram_mcp.models.messages`, and test unpacked arguments were sanitized. In 4.3.1, local wheel and sdist installation provenance was added to `install_guard.py` to prevent false-positive `UnsafeInstallationError` during tool installations, runtime environment loading was configured to respect `TELEGRAM_ENV_FILE`, and CI linting was extended to include `tests/test_install_guard.py`.
 
 ## Residual limitations
 
