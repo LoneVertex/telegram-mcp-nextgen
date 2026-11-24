@@ -1,5 +1,6 @@
 """Chats MCP tools."""
 
+import inspect
 import secrets
 
 from telegram_mcp.core.tl_custom import CreateForumTopicRequest, GetForumTopicsRequest
@@ -218,7 +219,10 @@ async def enable_forum_topics(
             title = sanitize_name(getattr(entity, "title", str(chat_id)))
             return f"Forum topics already enabled for {title}."
 
-        await cl(functions.channels.ToggleForumRequest(channel=entity, enabled=True, tabs=tabs))
+        toggle_kwargs: dict[str, Any] = {"channel": entity, "enabled": True, "tabs": tabs}
+        if "sidebar" in inspect.signature(functions.channels.ToggleForumRequest.__init__).parameters:
+            toggle_kwargs["sidebar"] = False
+        await cl(functions.channels.ToggleForumRequest(**toggle_kwargs))
         # Keep the resolved entity in sync for callers/tests that reuse it.
         try:
             entity.forum = True
