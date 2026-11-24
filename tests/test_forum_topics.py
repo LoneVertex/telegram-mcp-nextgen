@@ -116,3 +116,29 @@ async def test_create_forum_topic_requires_forum_enabled(monkeypatch):
         == "The specified supergroup does not have forum topics enabled. Use enable_forum_topics first."
     )
     assert client.requests == []
+
+
+@pytest.mark.asyncio
+async def test_enable_forum_topics_compatible_with_legacy_toggle_forum_signature(monkeypatch):
+    class LegacyToggleForumRequest:
+        def __init__(self, channel, enabled, tabs):
+            self.channel = channel
+            self.enabled = enabled
+            self.tabs = tabs
+
+    entity = _supergroup(forum=False)
+    client = RecordingClient()
+
+    async def fake_resolve(chat_id, cl):
+        return entity
+
+    monkeypatch.setattr(chats, "get_client", lambda account=None: client)
+    monkeypatch.setattr(chats, "resolve_entity", fake_resolve)
+    monkeypatch.setattr(functions.channels, "ToggleForumRequest", LegacyToggleForumRequest)
+
+    result = await chats.enable_forum_topics(chat_id=12345, tabs=False)
+
+    assert result == "Forum topics enabled for Hermes Topics."
+    assert len(client.requests) == 1
+    assert isinstance(client.requests[0], LegacyToggleForumRequest)
+    assert client.requests[0].tabs is False
