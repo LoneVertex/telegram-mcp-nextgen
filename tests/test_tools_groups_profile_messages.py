@@ -56,7 +56,7 @@ async def test_profile_tools(monkeypatch: pytest.MonkeyPatch) -> None:
         id=55,
         access_hash=1,
         file_reference=b"",
-        date=datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc),
+        date=datetime.datetime(2026, 1, 1, tzinfo=datetime.UTC),
         sizes=[],
         dc_id=1,
     )
@@ -95,7 +95,7 @@ async def test_profile_tools(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.asyncio
 async def test_chat_and_message_tools(monkeypatch: pytest.MonkeyPatch) -> None:
-    read_ts = datetime.datetime(2026, 11, 24, 8, 0, tzinfo=datetime.timezone.utc)
+    read_ts = datetime.datetime(2026, 11, 24, 8, 0, tzinfo=datetime.UTC)
     client = MockTelethonClient(
         handlers={
             "GetMessageReadParticipantsRequest": lambda _req: [
