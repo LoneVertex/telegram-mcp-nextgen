@@ -66,6 +66,7 @@ include = ["telegram_mcp*"]
 testpaths = ["tests"]
 addopts = ["--strict-markers", "--strict-config"]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.run]
 branch = true

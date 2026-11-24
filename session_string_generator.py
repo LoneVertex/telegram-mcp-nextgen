@@ -160,16 +160,16 @@ def main() -> None:
     args = _parse_args()
     _check_installation()
 
-    API_ID = os.getenv("TELEGRAM_API_ID")
+    api_id_raw = os.getenv("TELEGRAM_API_ID")
     API_HASH = os.getenv("TELEGRAM_API_HASH")
 
-    if not API_ID or not API_HASH:
+    if not api_id_raw or not API_HASH:
         print("Error: TELEGRAM_API_ID and TELEGRAM_API_HASH must be set in .env file")
         print("Create an .env file with your credentials from https://my.telegram.org/apps")
         sys.exit(1)
 
     try:
-        API_ID = int(API_ID)
+        API_ID = int(api_id_raw)
     except ValueError:
         print("Error: TELEGRAM_API_ID must be an integer")
         sys.exit(1)
