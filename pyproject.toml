@@ -25,14 +25,14 @@ classifiers = [
     "Typing :: Typed"
 ]
 dependencies = [
-    "filelock>=3.13,<5",
+    "filelock>=4.2.12,<5",
     "httpx>=0.28,<1",
     "mcp[cli]>=1.29,<2",
     "pillow>=13.0.0,<14",
-    "python-dotenv>=1.1,<2",
+    "python-dotenv>=1.2.4,<2",
     "python-json-logger>=3.3,<5",
     "qrcode>=8.2,<9",
-    "telethon>=1.44,<2",
+    "telethon>=1.46.0,<2",
 ]
 
 [project.optional-dependencies]
@@ -41,10 +41,10 @@ dev = [
     "build>=1.2,<2",
     "mypy>=1.14,<2",
     "pip-audit>=2.7,<3",
-    "pytest>=8.3,<10",
-    "pytest-asyncio>=0.24,<2",
+    "pytest>=9.2.0,<10",
+    "pytest-asyncio>=1.5.0,<2",
     "pytest-cov>=6,<8",
-    "ruff>=0.9,<1",
+    "ruff>=0.17.6,<1",
 ]
 
 [project.urls]
