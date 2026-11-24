@@ -36,7 +36,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-proxy = ["python-socks>=2.4,<3"]
+proxy = ["python-socks>=3.2.2,<4"]
 dev = [
     "build>=1.2,<2",
     "mypy>=2.4.1,<3",
