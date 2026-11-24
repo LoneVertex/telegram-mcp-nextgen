@@ -1,6 +1,6 @@
 filelock>=4.2.12,<5
 httpx>=0.28,<1
-mcp[cli]>=1.29,<2
+mcp[cli]>=2.3.0,<3
 pillow>=13.0.0,<14
 python-dotenv>=1.2.4,<2
 python-json-logger>=3.3,<5
